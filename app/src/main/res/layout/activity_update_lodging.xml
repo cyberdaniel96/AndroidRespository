@@ -1,0 +1,166 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_horizontal_margin"
+    android:paddingLeft="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_horizontal_margin"
+    tools:context="com.example.johnn.lodgingservicesystemstudent.UpdateLodging">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/titleEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:enabled="false"
+                android:hint="@string/titleHint" />
+
+            <EditText
+                android:id="@+id/addressEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleEt"
+                android:inputType="textCapWords"
+                android:enabled="false"
+                android:hint="@string/addressHint" />
+
+            <EditText
+                android:id="@+id/postcodeEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/addressEt"
+                android:inputType="phone"
+                android:enabled="false"
+                android:hint="@string/postcodeHint" />
+
+            <EditText
+                android:id="@+id/cityEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/postcodeEt"
+                android:inputType="textCapWords"
+                android:enabled="false"
+                android:hint="@string/cityHint" />
+
+            <EditText
+                android:id="@+id/stateEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cityEt"
+                android:inputType="textCapWords"
+                android:enabled="false"
+                android:hint="@string/stateHint" />
+
+            <EditText
+                android:id="@+id/countryEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stateEt"
+                android:inputType="textCapWords"
+                android:enabled="false"
+                android:hint="@string/countryHint" />
+
+            <EditText
+                android:id="@+id/priceEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/countryEt"
+                android:inputType="phone"
+                android:enabled="false"
+                android:hint="@string/priceHint" />
+
+            <TextView
+                android:id="@+id/tvFacility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/priceEt"
+                android:layout_marginTop="15dp"
+                android:text="@string/facility" />
+
+            <CheckBox
+                android:id="@+id/washingMachineCb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvFacility"
+                android:enabled="false"
+                android:text="@string/washingMachine" />
+
+            <CheckBox
+                android:id="@+id/waterHeaterCb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/washingMachineCb"
+                android:enabled="false"
+                android:text="@string/waterHeater" />
+
+            <CheckBox
+                android:id="@+id/refrigeratorCb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/waterHeaterCb"
+                android:enabled="false"
+                android:text="@string/refrigerator" />
+
+
+            <Spinner
+                android:id="@+id/lodgingTypeS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/refrigeratorCb" />
+
+            <EditText
+                android:id="@+id/descriptionEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lodgingTypeS"
+                android:layout_marginTop="15dp"
+                android:enabled="false"
+                android:hint="@string/descriptionHint" />
+
+            <EditText
+                android:id="@+id/expiryDateEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/descriptionEt"
+                android:enabled="false"
+                android:textColor="#111111"/>
+
+            <ImageView
+                android:id="@+id/lodgingPicIv"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_below="@id/expiryDateEt"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_home_black_48dp"/>
+
+            <Button
+                android:id="@+id/chooseBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chooseProPic"
+                android:layout_below="@id/expiryDateEt"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="10dp"
+                android:visibility="gone"
+                android:layout_toRightOf="@id/lodgingPicIv"
+                android:onClick="ChoosePicture"/>
+
+            <Button
+                android:id="@+id/editBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lodgingPicIv"
+                android:layout_marginTop="15dp"
+                android:text="@string/edit" />
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

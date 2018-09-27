@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item android:title="@string/manageLodging">
+            <menu>
+                <item
+                    android:id="@+id/nav_addLodging"
+                    android:icon="@drawable/ic_add_circle_black_48dp"
+                    android:title="@string/addLodging"
+                    android:checkable="false"/>
+                <item
+                    android:id="@+id/nav_viewLodging"
+                    android:icon="@drawable/ic_view_list_black_48dp"
+                    android:title="@string/viewLodging"
+                    android:checkable="false"/>
+                <item
+                    android:id="@+id/nav_viewFavourite"
+                    android:icon="@drawable/ic_favorite_black_48dp"
+                    android:title="@string/favouriteLodging"
+                    android:checkable="false"/>
+            </menu>
+        </item>
+    </group>
+    <group android:id="@+id/bottom">
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_info_black_48dp"
+            android:title="@string/aboutUs" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_exit_to_app_black_48dp"
+            android:title="@string/logout" />
+    </group>
+
+</menu>

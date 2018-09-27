@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.johnn.lodgingservicesystemstudent.ChatRoom">
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/keywordSV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/sendBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/keywordSV"
+        android:text="@string/send"/>
+
+    <EditText
+        android:id="@+id/messageEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/keywordSV"
+        android:layout_toRightOf="@id/sendBtn"
+        android:hint="@string/message"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/messageRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_below="@id/messageEt"
+        android:layout_marginTop="10dp" />
+
+</RelativeLayout>

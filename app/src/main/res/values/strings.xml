@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">Lodging Service System</string>
+    <string name="idHint">User ID</string>
+    <string name="passwordHint">Password</string>
+    <string name="login">Login</string>
+    <string name="chooseProPic">Choose Picture</string>
+    <string name="showPass">Show password</string>
+    <string name="home">Lodging Listings</string>
+    <string name="manageLodging">Manage Lodging</string>
+    <string name="addLodging">Add Lodging</string>
+    <string name="viewLodging">My Lodging</string>
+    <string name="updateLodging">Update Lodging</string>
+    <string name="favouriteLodging">Favourite Lodging</string>
+    <string name="logout">Logout</string>
+    <string name="edit">Edit</string>
+    <string name="titleHint">Title</string>
+    <string name="addressHint">Address</string>
+    <string name="postcodeHint">Postcode</string>
+    <string name="cityHint">City</string>
+    <string name="stateHint">State</string>
+    <string name="countryHint">Country</string>
+    <string name="priceHint">Price</string>
+    <string name="facility">Facility</string>
+    <string name="washingMachine">Washing Machine</string>
+    <string name="waterHeater">Water Heater</string>
+    <string name="refrigerator">Refrigerator</string>
+    <string name="descriptionHint">Description</string>
+    <string name="createLodging">Create Lodging</string>
+    <string name="keyword">Keyword</string>
+    <string name="chat">Chat Room</string>
+    <string name="send">Send</string>
+    <string name="message">Message</string>
+    <string name="delete">Delete</string>
+    <string name="refresh">Refresh</string>
+    <string name="viewLodgingDetails">View Lodging Details</string>
+    <string name="viewMessage">View Message</string>
+    <string name="addFavourite">Add to favourite</string>
+    <string name="removeFavourite">Remove from favourite</string>
+    <string name="favouriteDetail">Favourite Details</string>
+    <string name="aboutUs">About Us</string>
+    <string name="feedback">Feedback</string>
+    <string name="submit">Submit</string>
+
+    <string-array name="lodgingType">
+        <item>Choose your lodging type</item>
+        <item>Landed</item>
+        <item>Condominium</item>
+        <item>Apartment</item>
+        <item>Flat</item>
+    </string-array>
+
+    <string-array name="feedbackType">
+        <item>Bug</item>
+        <item>Improvement</item>
+    </string-array>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>

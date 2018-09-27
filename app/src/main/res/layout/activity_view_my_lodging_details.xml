@@ -1,0 +1,128 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_horizontal_margin"
+    android:paddingLeft="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_horizontal_margin"
+    tools:context="com.example.johnn.lodgingservicesystemstudent.ViewMyLodgingDetails">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/titleTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
+            <TextView
+                android:id="@+id/addressTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleTv"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
+            <TextView
+                android:id="@+id/facilityTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/addressTv"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
+            <TextView
+                android:id="@+id/priceTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/facilityTv"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
+            <TextView
+                android:id="@+id/lodgingTypeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/priceTv"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
+            <TextView
+                android:id="@+id/descriptionTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lodgingTypeTv"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
+            <TextView
+                android:id="@+id/ownerTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/descriptionTv"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
+            <TextView
+                android:id="@+id/contactNoTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ownerTv"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
+            <TextView
+                android:id="@+id/emailTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/contactNoTv"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
+            <TextView
+                android:id="@+id/expireDateTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emailTv"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
+            <ImageView
+                android:id="@+id/lodgingPicIv"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_below="@id/expireDateTv"
+                android:scaleType="centerCrop"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_home_black_48dp"/>
+
+            <Button
+                android:id="@+id/updateBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:drawableStart="@drawable/ic_update_black_18dp"
+                android:text="@string/updateLodging"
+                android:layout_below="@id/lodgingPicIv"/>
+
+            <Button
+                android:id="@+id/chatBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_chat_black_18dp"
+                android:text="@string/chat"
+                android:layout_below="@id/updateBtn"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
