@@ -47,11 +47,14 @@ public class PrivateChatList extends AppCompatActivity {
     List<Message> ml = new ArrayList<>();
     List<Message> tempml = new ArrayList<>();
     ProgressDialog pb;
-    PrivateChatAdapter privateChatAdapter;
+
 
     //Layout Tools
     private Button btnSend;
     private EditText messageBody;
+
+    private RecyclerView mMessageRecycler;
+    private PrivateChatAdapter privateChatAdapter;
 
 
     @Override
@@ -71,15 +74,15 @@ public class PrivateChatList extends AppCompatActivity {
         pb.setCanceledOnTouchOutside(false);
         pb.setMessage("Loading...");
 
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.privatechatRV);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setReverseLayout(false);
-        layoutManager.setStackFromEnd(true);
-        recyclerView.setLayoutManager(layoutManager);
+        mMessageRecycler = (RecyclerView) findViewById(R.id.privatechatRV);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(false);
+        linearLayoutManager.setStackFromEnd(true);
+        mMessageRecycler.setLayoutManager(linearLayoutManager);
 
-        privateChatAdapter = new PrivateChatAdapter(ml);
-        privateChatAdapter.setLoggedID(clientId.substring(0,clientId.length()-1));
-        recyclerView.setAdapter(privateChatAdapter);
+        privateChatAdapter = new PrivateChatAdapter(this, ml);
+        privateChatAdapter.setID(clientId);
+        mMessageRecycler.setAdapter(privateChatAdapter);
     }
 
     public void Connect() throws Exception {
@@ -119,8 +122,11 @@ public class PrivateChatList extends AppCompatActivity {
                 if(receiverClientID.equals(clientId)){
                     if(command.equals("004833")){
                         Message m = new PrivateChat(datas[8],datas[4],datas[5],datas[6],datas[7]);
-                        System.out.println(m.toString());
-                        ml.add(new PrivateChat(datas[8],datas[4],datas[5],datas[6],datas[7]));
+                        for(String temp: datas){
+                            System.out.println(temp);
+                        }
+                        ml.add(m);
+                        privateChatAdapter.setID(receiverClientID);
                         privateChatAdapter.notifyDataSetChanged();
 
                     }
@@ -218,28 +224,25 @@ public class PrivateChatList extends AppCompatActivity {
         String sender = clientId.substring(0, clientId.length() -1);
         String receiver = "johnny96"; //lodging owner
 
-
-
         ml.add(new PrivateChat("",newContent,sentTime,sender,receiver));
         privateChatAdapter.notifyDataSetChanged();
-        privateChatAdapter.setLoggedID(clientId.substring(0,clientId.length()-1));
         String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId,newContent,sentTime, sender, receiver});
-//        Publish(payload);
+        Publish(payload);
     }
 
     public void PreSetData(String message) throws Exception{
-        ml.clear();
-        ml.add(new PrivateChat("messageID","conent","time","senderID","receiverID"));
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.privatechatRV);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setReverseLayout(false);
-        layoutManager.setStackFromEnd(true);
-        recyclerView.setLayoutManager(layoutManager);
-
-        privateChatAdapter = new PrivateChatAdapter(ml);
-
-        recyclerView.setAdapter(privateChatAdapter);
+//        ml.clear();
+//        ml.add(new PrivateChat("messageID","conent","time","senderID","receiverID"));
+//
+//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.privatechatRV);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        layoutManager.setReverseLayout(false);
+//        layoutManager.setStackFromEnd(true);
+//        recyclerView.setLayoutManager(layoutManager);
+//
+//        privateChatAdapter = new PrivateChatAdapter(ml);
+//
+//        recyclerView.setAdapter(privateChatAdapter);
 
 
     }

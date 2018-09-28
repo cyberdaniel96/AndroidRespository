@@ -1,5 +1,6 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -20,94 +21,112 @@ import java.util.function.Function;
 import domain.Message;
 import domain.PrivateChat;
 
-public class PrivateChatAdapter extends RecyclerView.Adapter<PrivateChatAdapter.ViewHolder>{
-    private String loggedID;
-    private static ClickListener clickListener;
-    private int position;
-    private List<Message> ml;
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+public class PrivateChatAdapter extends RecyclerView.Adapter{
+    private final int VIEW_TYPE_MESSAGE_SENT = 1;
+    private final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
-        public TextView sentContent;
-        public TextView sentTime;
+    private Context context;
+    private List<Message> messageList;
+    private String loginID;
 
 
-        public TextView receiveContent;
-        public TextView receiveTime;
-        public TextView receiverID;
-        public ImageView picture;
+    public PrivateChatAdapter(Context context, List<Message> messageList){
+        this.context = context;
+        this.messageList = messageList;
+    }
 
+    private class ReceivedMessageHolder extends RecyclerView.ViewHolder{
+         TextView name, content, time;
+         ImageView img;
 
-        public ViewHolder(View v) {
-            super(v);
-            v.setOnClickListener(this);
-            sentContent = v.findViewById(R.id.sent_content);
-            sentTime = v.findViewById(R.id.sent_time);
+         ReceivedMessageHolder(View itemView){
+             super(itemView);
 
-            receiveContent = v.findViewById(R.id.text_message_body);
-            receiveTime = v.findViewById(R.id.text_message_time);
-            receiverID = v.findViewById(R.id.text_message_name);
-            picture = v.findViewById(R.id.image_message_profile);
+             name = (TextView)itemView.findViewById(R.id.text_message_name);
+             content = (TextView)itemView.findViewById(R.id.text_message_body);
+             time = (TextView)itemView.findViewById(R.id.text_message_time);
+         }
+
+         void bind(Message message){
+             Message msg = (PrivateChat)message;
+
+             name.setText(((PrivateChat) msg).getReceiverID());
+             content.setText(msg.getContent());
+             time.setText(msg.getSentTime());
+         }
+    }
+
+    private class SentMessageHolder extends RecyclerView.ViewHolder {
+         TextView content, time;
+
+         SentMessageHolder(View itemView){
+            super(itemView);
+
+            content = (TextView)itemView.findViewById(R.id.text_message_body);
+            time = (TextView)itemView.findViewById(R.id.text_message_time);
         }
 
-        @Override
-        public void onClick(View view) {
-            clickListener.onItemClick(getAdapterPosition(), view);
+        void bind(Message message) {
+            Message msg = (PrivateChat)message;
+            content.setText(msg.getContent());
+
+            // Format the stored timestamp into a readable String using method.
+            time.setText(msg.getSentTime());
         }
     }
 
-
-    public PrivateChatAdapter(List<Message> MessageList) {
-        ml = MessageList;
-    }
-
-    //
-    @Override
-    public PrivateChatAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Message m = (PrivateChat)ml.get(position);
-        View v = null;
-        System.out.println(loggedID.equals(((PrivateChat) m).getReceiverID()));
-
-        if(loggedID.equals(((PrivateChat) m).getReceiverID())){
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.private_message_sent, parent, false);
-        }else{
-
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.private_message_receive, parent, false);
-
-        }
-
-        return new ViewHolder(v);
-    }
 
     @Override
-    public void onBindViewHolder(PrivateChatAdapter.ViewHolder holder, int position) {
-        Message m = (PrivateChat)ml.get(position);
-        this.position = position;
-        if(loggedID.equals(((PrivateChat) m).getSenderID())){
-            holder.sentContent.setText(m.getContent());
-            holder.sentTime.setText(m.getSentTime());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
+
+        if (viewType == VIEW_TYPE_MESSAGE_SENT) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.private_message_sent, parent, false);
+            return new SentMessageHolder(view);
+        } else if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.private_message_receive, parent, false);
+            return new ReceivedMessageHolder(view);
         }
 
-        if(loggedID.equals(((PrivateChat) m).getReceiverID())){
-
-            holder.receiveContent.setText("hhiuh");
-        }
+        return null;
     }
 
-    public void setLoggedID(String id){
-        this.loggedID = id;
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Message message = (PrivateChat) messageList.get(position);
+
+        switch (holder.getItemViewType()) {
+            case VIEW_TYPE_MESSAGE_SENT:
+                ((SentMessageHolder) holder).bind(message);
+                break;
+            case VIEW_TYPE_MESSAGE_RECEIVED:
+                ((ReceivedMessageHolder) holder).bind(message);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return ml.size();
+        return messageList.size();
     }
 
-    public void setOnItemClickListener(ClickListener clickListener) {
-        PrivateChatAdapter.clickListener = clickListener;
+    @Override
+    public int getItemViewType(int position) {
+        Message message = (PrivateChat) messageList.get(position);
+
+        System.out.println(loginID +" :TESTING: " + ((PrivateChat) message).getSenderID());
+        System.out.println(loginID.equals(((PrivateChat) message).getSenderID()));
+       if(loginID.equals(((PrivateChat) message).getSenderID())){
+           return VIEW_TYPE_MESSAGE_SENT;
+       }else{
+           return VIEW_TYPE_MESSAGE_RECEIVED;
+
+       }
     }
 
-    public interface ClickListener {
-        void onItemClick(int position, View v);
+    public void setID(String id){
+        String temp = id.substring(0, id.length()-1);
+        this.loginID = temp;
     }
-
 }
