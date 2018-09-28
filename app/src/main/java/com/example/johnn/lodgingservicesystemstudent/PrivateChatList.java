@@ -36,13 +36,6 @@ import service.Converter;
 import service.SessionManager;
 
 public class PrivateChatList extends AppCompatActivity {
-//here is testing purpose
-    //For Testing Purposed
-        private String sender = "1610480";
-        private String receiver = "johnny96";
-    //End: For Testing Purposed
-
-
     MqttAndroidClient client;
     String topic = "MY/TARUC/LSS/000000001/PUB";
     int qos = 1;
@@ -53,7 +46,7 @@ public class PrivateChatList extends AppCompatActivity {
     int count = 0;
     List<Message> ml = new ArrayList<>();
     List<Message> tempml = new ArrayList<>();
-    //ProgressDialog pb;
+    ProgressDialog pb;
     PrivateChatAdapter privateChatAdapter;
 
     //Layout Tools
@@ -74,10 +67,10 @@ public class PrivateChatList extends AppCompatActivity {
         messageBody.setText("");
         btnSend = (Button) findViewById(R.id.button_chatbox_send);
 
-        //pb = new ProgressDialog(this);
-        //pb.setCanceledOnTouchOutside(false);
-        //pb.setMessage("Loading...");
-        //pb.dismiss();
+        pb = new ProgressDialog(this);
+        pb.setCanceledOnTouchOutside(false);
+        pb.setMessage("Loading...");
+
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.privatechatRV);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(false);
@@ -85,6 +78,7 @@ public class PrivateChatList extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         privateChatAdapter = new PrivateChatAdapter(ml);
+        privateChatAdapter.setLoggedID(clientId.substring(0,clientId.length()-1));
         recyclerView.setAdapter(privateChatAdapter);
     }
 
@@ -97,7 +91,6 @@ public class PrivateChatList extends AppCompatActivity {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
                 Subscribe();
-
             }
 
             @Override
@@ -114,7 +107,25 @@ public class PrivateChatList extends AppCompatActivity {
             @Override
             public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
                 System.out.println("Message Arrived");
+                //check command
+                //check id
+                //if yes set data
+                //if no do nothing
 
+                Converter c = new Converter();
+                String[] datas = c.convertToString(mqttMessage.toString());
+                String command = datas[0];
+                String receiverClientID = datas[3];
+                if(receiverClientID.equals(clientId)){
+                    if(command.equals("004833")){
+                        Message m = new PrivateChat(datas[8],datas[4],datas[5],datas[6],datas[7]);
+                        System.out.println(m.toString());
+                        ml.add(new PrivateChat(datas[8],datas[4],datas[5],datas[6],datas[7]));
+                        privateChatAdapter.notifyDataSetChanged();
+
+                    }
+
+                }
             }
 
             @Override
@@ -159,9 +170,10 @@ public class PrivateChatList extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //pb.show();
+        pb.show();
         try {
             Connect();
+            pb.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,18 +183,16 @@ public class PrivateChatList extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         try {
-            //client.disconnect();
+            client.disconnect();
+            pb.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
+    public void onBackPressed() {
+
     }
 
     public void send(View v) throws Exception {
@@ -198,23 +208,23 @@ public class PrivateChatList extends AppCompatActivity {
 
         String command = "004833";
         String reserve = "000000000000000000000000";
-        String senderClientId = sender+"7";//change to client id later
+        String senderClientId = clientId;//change to client id later
         String receiverClientId = "server";
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date date = new Date();
 
         String sentTime = formatter.format(date);
-        String sender = this.sender;
-        String receiver = this.receiver; //lodging owner
+        String sender = clientId.substring(0, clientId.length() -1);
+        String receiver = "johnny96"; //lodging owner
 
 
 
         ml.add(new PrivateChat("",newContent,sentTime,sender,receiver));
         privateChatAdapter.notifyDataSetChanged();
-
+        privateChatAdapter.setLoggedID(clientId.substring(0,clientId.length()-1));
         String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId,newContent,sentTime, sender, receiver});
-        Publish(payload);
+//        Publish(payload);
     }
 
     public void PreSetData(String message) throws Exception{

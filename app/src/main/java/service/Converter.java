@@ -45,7 +45,7 @@ public class Converter {
 
         for(int index = 0; index < arr.length; index++){
             tempResult[index] = c.ToString(arr[index]);
-            System.out.println(tempResult[index]);
+
         }
 
         return tempResult;

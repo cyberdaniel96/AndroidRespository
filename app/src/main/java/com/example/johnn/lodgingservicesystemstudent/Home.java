@@ -312,6 +312,9 @@ public class Home extends AppCompatActivity
             SessionManager session = new SessionManager(getApplicationContext());
             session.logoutUser();
             this.finish();
+        }else if(id == R.id.nav_private_chat){
+            Intent intent = new Intent(this, PrivateChatList.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
