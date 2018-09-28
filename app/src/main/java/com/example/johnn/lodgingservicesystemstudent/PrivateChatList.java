@@ -36,7 +36,7 @@ import service.Converter;
 import service.SessionManager;
 
 public class PrivateChatList extends AppCompatActivity {
-
+//here is testing purpose
     //For Testing Purposed
         private String sender = "1610480";
         private String receiver = "johnny96";
