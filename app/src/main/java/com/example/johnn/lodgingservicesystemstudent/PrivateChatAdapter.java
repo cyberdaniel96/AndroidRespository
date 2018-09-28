@@ -27,8 +27,8 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
 
     private Context context;
     private List<Message> messageList;
-    private String loginID;
 
+    private String id;
 
     public PrivateChatAdapter(Context context, List<Message> messageList){
         this.context = context;
@@ -114,19 +114,17 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
     @Override
     public int getItemViewType(int position) {
         Message message = (PrivateChat) messageList.get(position);
-
-        System.out.println(loginID +" :TESTING: " + ((PrivateChat) message).getSenderID());
-        System.out.println(loginID.equals(((PrivateChat) message).getSenderID()));
-       if(loginID.equals(((PrivateChat) message).getSenderID())){
+        System.out.println(id);
+       if(id.equals(((PrivateChat) message).getSenderID())) {
            return VIEW_TYPE_MESSAGE_SENT;
        }else{
            return VIEW_TYPE_MESSAGE_RECEIVED;
-
        }
     }
 
     public void setID(String id){
-        String temp = id.substring(0, id.length()-1);
-        this.loginID = temp;
+        String temp = id.substring(0,id.length()-1);
+        this.id = temp;
     }
+
 }

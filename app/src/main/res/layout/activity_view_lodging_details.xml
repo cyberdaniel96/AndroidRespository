@@ -95,6 +95,14 @@
                 android:layout_marginTop="10dp"
                 android:textColor="#111111"/>
 
+            <TextView
+                android:id="@+id/logingOwner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/expireDateTv"
+                android:layout_marginTop="10dp"
+                android:textColor="#111111"/>
+
             <ImageView
                 android:id="@+id/lodgingPicIv"
                 android:layout_width="200dp"
@@ -121,6 +129,15 @@
                 android:drawableStart="@drawable/ic_chat_black_18dp"
                 android:text="@string/chat"
                 android:layout_below="@id/favouriteBtn"/>
+
+            <Button
+                android:id="@+id/privateChat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chatBtn"
+                android:drawableStart="@drawable/ic_chat_black_18dp"
+                android:onClick="navToPrivateChat"
+                android:text="@string/private_chat" />
 
         </RelativeLayout>
     </ScrollView>

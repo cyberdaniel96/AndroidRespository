@@ -119,19 +119,13 @@ public class PrivateChatList extends AppCompatActivity {
                 String[] datas = c.convertToString(mqttMessage.toString());
                 String command = datas[0];
                 String receiverClientID = datas[3];
-                if(receiverClientID.equals(clientId)){
-                    if(command.equals("004833")){
-                        Message m = new PrivateChat(datas[8],datas[4],datas[5],datas[6],datas[7]);
-                        for(String temp: datas){
-                            System.out.println(temp);
-                        }
-                        ml.add(m);
-                        privateChatAdapter.setID(receiverClientID);
+                if(command.equals("004833")){
+                        ml.add(new PrivateChat(datas[8],datas[4],datas[5],datas[6],datas[7]));
+                        privateChatAdapter.setID(clientId);
                         privateChatAdapter.notifyDataSetChanged();
+                 }
 
-                    }
 
-                }
             }
 
             @Override
@@ -222,10 +216,8 @@ public class PrivateChatList extends AppCompatActivity {
 
         String sentTime = formatter.format(date);
         String sender = clientId.substring(0, clientId.length() -1);
-        String receiver = "johnny96"; //lodging owner
-
-        ml.add(new PrivateChat("",newContent,sentTime,sender,receiver));
-        privateChatAdapter.notifyDataSetChanged();
+        Intent intent = getIntent();
+        String receiver = intent.getStringExtra("lodgingOwner"); //lodging owner
         String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId,newContent,sentTime, sender, receiver});
         Publish(payload);
     }

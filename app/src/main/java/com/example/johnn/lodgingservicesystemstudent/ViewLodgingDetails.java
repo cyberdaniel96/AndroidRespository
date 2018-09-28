@@ -24,6 +24,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import domain.PrivateChat;
 import service.Converter;
 
 public class ViewLodgingDetails extends AppCompatActivity {
@@ -36,6 +37,8 @@ public class ViewLodgingDetails extends AppCompatActivity {
     MemoryPersistence persistence = new MemoryPersistence();
     Converter c = new Converter();
     ProgressDialog pb;
+
+    private Button btnPrivateChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,13 @@ public class ViewLodgingDetails extends AppCompatActivity {
                 pb.show();
             }
         });
+    }
+
+    public void navToPrivateChat(View view){
+        Intent intent = new Intent(this, PrivateChatList.class);
+        TextView textView = (TextView)findViewById(R.id.logingOwner);
+        intent.putExtra("lodgingOwner",textView.getText().toString());
+        startActivity(intent);
     }
 
     public void Connect() throws Exception {
@@ -179,6 +189,7 @@ public class ViewLodgingDetails extends AppCompatActivity {
         TextView contactNo = (TextView) findViewById(R.id.contactNoTv);
         TextView email = (TextView) findViewById(R.id.emailTv);
         TextView expireDate = (TextView) findViewById(R.id.expireDateTv);
+        TextView ownerId = (TextView)findViewById(R.id.logingOwner);
         ImageView lodgingPic = (ImageView) findViewById(R.id.lodgingPicIv);
         String sFacility = "";
 
@@ -207,6 +218,7 @@ public class ViewLodgingDetails extends AppCompatActivity {
         contactNo.setText("Contact No: " + c.ToString(datas[13]));
         email.setText("Email: " + c.ToString(datas[14]));
         expireDate.setText("Expire Date: " + c.ToString(datas[11]));
+        ownerId.setText("Owner ID: " + c.ToString(datas[17]));
         Glide.with(this)
                 .load(c.ToString(datas[16]))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
