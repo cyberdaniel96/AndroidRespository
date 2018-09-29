@@ -50,7 +50,7 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
          void bind(Message message){
              Message msg = (PrivateChat)message;
 
-             name.setText(((PrivateChat) msg).getReceiverID());
+             name.setText(((PrivateChat) msg).getSenderID());
              content.setText(msg.getContent());
              time.setText(msg.getSentTime());
          }
@@ -116,6 +116,7 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
         Message message = (PrivateChat) messageList.get(position);
         System.out.println(id);
        if(id.equals(((PrivateChat) message).getSenderID())) {
+           System.out.println("Sender SET");
            return VIEW_TYPE_MESSAGE_SENT;
        }else{
            return VIEW_TYPE_MESSAGE_RECEIVED;

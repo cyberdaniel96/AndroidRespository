@@ -168,12 +168,18 @@ public class PrivateChatList extends AppCompatActivity {
     }*/
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        System.out.println(item.getItemId());
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         pb.show();
         try {
             Connect();
-            pb.dismiss();
+                pb.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -184,15 +190,9 @@ public class PrivateChatList extends AppCompatActivity {
         super.onPause();
         try {
             client.disconnect();
-            pb.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-
     }
 
     public void send(View v) throws Exception {
@@ -217,25 +217,18 @@ public class PrivateChatList extends AppCompatActivity {
         String sentTime = formatter.format(date);
         String sender = clientId.substring(0, clientId.length() -1);
         Intent intent = getIntent();
-        String receiver = intent.getStringExtra("lodgingOwner"); //lodging owner
+        String receiver = intent.getStringExtra("lodgingOwner").replace("Owner ID: ",""); //lodging owner
         String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId,newContent,sentTime, sender, receiver});
+
+        if(sender.compareTo(receiver) == 0){
+            Toast.makeText(this, "YOU CANNOT SEND TO YOURSELF..!",Toast.LENGTH_LONG).show();
+            return;
+        }
+
         Publish(payload);
     }
 
-    public void PreSetData(String message) throws Exception{
-//        ml.clear();
-//        ml.add(new PrivateChat("messageID","conent","time","senderID","receiverID"));
-//
-//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.privatechatRV);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        layoutManager.setReverseLayout(false);
-//        layoutManager.setStackFromEnd(true);
-//        recyclerView.setLayoutManager(layoutManager);
-//
-//        privateChatAdapter = new PrivateChatAdapter(ml);
-//
-//        recyclerView.setAdapter(privateChatAdapter);
-
+    public void SetData(String message) throws Exception{
 
     }
 

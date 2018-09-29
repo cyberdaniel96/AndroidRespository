@@ -64,7 +64,9 @@
         <activity
             android:name=".Feedback"
             android:label="@string/feedback" />
-        <activity android:name=".PrivateChatList" >
+        <activity android:name=".PrivateChatList"
+            android:parentActivityName="com.example.johnn.lodgingservicesystemstudent.ViewLodgingDetails"
+            >
 
         </activity>
 
