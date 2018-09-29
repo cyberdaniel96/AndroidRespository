@@ -94,6 +94,7 @@ public class PrivateChatList extends AppCompatActivity {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
                 Subscribe();
+                Retrieve();
             }
 
             @Override
@@ -110,22 +111,31 @@ public class PrivateChatList extends AppCompatActivity {
             @Override
             public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
                 System.out.println("Message Arrived");
-                //check command
-                //check id
-                //if yes set data
-                //if no do nothing
-
                 Converter c = new Converter();
-                String[] datas = c.convertToString(mqttMessage.toString());
-                String command = datas[0];
-                String receiverClientID = datas[3];
+                String datas[] = mqttMessage.toString().split("\\$");
+                String[] head = datas[0].split("/");
+                String command = c.ToString(head[0]);
+                String receiverClientID =  c.ToString(head[3]);
+                String[] value = c.convertToString(datas[0]);
+
+                if(receiverClientID.equals(clientId)){
+                    if(command.equals("004835")){
+                        SetData(mqttMessage.toString());
+                    }
+                }
+
                 if(command.equals("004833")){
-                        ml.add(new PrivateChat(datas[8],datas[4],datas[5],datas[6],datas[7]));
+                    if(receiverClientID.equals(clientId)){
+                        ml.add(new PrivateChat(value[8],value[4],value[5],value[6],value[7]));
                         privateChatAdapter.setID(clientId);
                         privateChatAdapter.notifyDataSetChanged();
-                 }
+                    }else{
+                        ml.add(new PrivateChat(value[8],value[4],value[5],value[6],value[7]));
+                        privateChatAdapter.setID(clientId);
+                        privateChatAdapter.notifyDataSetChanged();
+                    }
 
-
+                }
             }
 
             @Override
@@ -152,20 +162,6 @@ public class PrivateChatList extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-/*    public void Publish(Message payload){
-        try{
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(payload);
-            oos.flush();
-            MqttMessage mqttMessage = new MqttMessage(bos.toByteArray());
-            mqttMessage.setQos(qos);
-            client.publish(topic, mqttMessage);
-        }catch(Exception e){
-
-        }
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -208,7 +204,7 @@ public class PrivateChatList extends AppCompatActivity {
 
         String command = "004833";
         String reserve = "000000000000000000000000";
-        String senderClientId = clientId;//change to client id later
+        String senderClientId = clientId;
         String receiverClientId = "server";
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -229,10 +225,35 @@ public class PrivateChatList extends AppCompatActivity {
     }
 
     public void SetData(String message) throws Exception{
-
+        ml.clear();
+        String datas[] = message.toString().split("\\$");
+        for (String tempDatas: datas){
+            if(tempDatas.charAt(tempDatas.length()-1) == '\\'){
+                tempDatas = tempDatas.substring(0,tempDatas.length()-1);
+            }
+            String[] data = c.convertToString(tempDatas);
+            if(!(data[0].compareTo("004835") == 0)){
+                Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
+                ml.add(message1);
+                privateChatAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
 
+    public void Retrieve() {
+        String command = "004835";
+        String reserve = "000000000000000000000000";
+        String senderClientId = clientId;//change to client id later
+        String receiverClientId = "server";
+        String sender = clientId.substring(0, clientId.length() -1);
+        Intent intent = getIntent();
+        String receiverID = intent.getStringExtra("lodgingOwner").replace("Owner ID: ",""); //lodging owner
+
+        String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, sender, receiverID});
+        Publish(payload);
+
+    }
 
 }
 

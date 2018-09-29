@@ -119,6 +119,7 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
            System.out.println("Sender SET");
            return VIEW_TYPE_MESSAGE_SENT;
        }else{
+           System.out.println("Receiver SET");
            return VIEW_TYPE_MESSAGE_RECEIVED;
        }
     }
@@ -126,6 +127,7 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
     public void setID(String id){
         String temp = id.substring(0,id.length()-1);
         this.id = temp;
+        System.out.println(this.id);
     }
 
 }
