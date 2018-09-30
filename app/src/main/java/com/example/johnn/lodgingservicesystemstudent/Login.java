@@ -125,7 +125,7 @@ public class Login extends AppCompatActivity {
                             SharedPreferences.Editor editor = getSharedPreferences("LoggedInUser", MODE_PRIVATE).edit();
                             editor.putString("UserID", userId);
                             editor.apply();
-
+                            Toast.makeText(getBaseContext(),c.ToString(datas[7]),Toast.LENGTH_LONG).show();
                             Intent in = new Intent(Login.this, PrivateChatList.class);
                             startActivity(in);
                         } else if (state.equals("1")){

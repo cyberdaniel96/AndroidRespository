@@ -313,7 +313,7 @@ public class Home extends AppCompatActivity
             session.logoutUser();
             this.finish();
         }else if(id == R.id.nav_private_chat){
-            Intent intent = new Intent(this, PrivateChatList.class);
+            Intent intent = new Intent(this, Listed_Private_Chat.class);
             startActivity(intent);
         }
 

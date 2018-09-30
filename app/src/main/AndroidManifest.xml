@@ -17,11 +17,10 @@
 
         <activity android:name=".Login">
             android:windowSoftInputMode="adjustPan"
-            <intent-filter >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
         </activity>
         <activity
@@ -64,12 +63,10 @@
         <activity
             android:name=".Feedback"
             android:label="@string/feedback" />
-        <activity android:name=".PrivateChatList"
-            android:parentActivityName="com.example.johnn.lodgingservicesystemstudent.ViewLodgingDetails"
-            >
-
-        </activity>
-
+        <activity
+            android:name=".PrivateChatList"
+            android:parentActivityName=".ViewLodgingDetails"></activity>
+        <activity android:name=".Listed_Private_Chat"></activity>
     </application>
 
 </manifest>

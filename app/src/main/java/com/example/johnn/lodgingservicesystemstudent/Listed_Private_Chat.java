@@ -3,15 +3,10 @@ package com.example.johnn.lodgingservicesystemstudent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaCas;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -23,19 +18,15 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import domain.Message;
 import domain.PrivateChat;
 import service.Converter;
-import service.SessionManager;
 
-public class PrivateChatList extends AppCompatActivity {
+public class Listed_Private_Chat extends AppCompatActivity {
+
     MqttAndroidClient client;
     String topic = "MY/TARUC/LSS/000000001/PUB";
     int qos = 1;
@@ -44,45 +35,30 @@ public class PrivateChatList extends AppCompatActivity {
     MemoryPersistence persistence = new MemoryPersistence();
     Converter c = new Converter();
     int count = 0;
-    List<Message> ml = new ArrayList<>();
-    List<Message> tempml = new ArrayList<>();
     ProgressDialog pb;
-
-
-    //Layout Tools
-    private Button btnSend;
-    private EditText messageBody;
-
+    ListedPrivateChatAdapter adapter;
     private RecyclerView mMessageRecycler;
-    private PrivateChatAdapter privateChatAdapter;
-
-
+    List<Message> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_private_chat_list);
-
+        setContentView(R.layout.activity_listed__private__chat);
+        pb = new ProgressDialog(this);
+        pb.setCanceledOnTouchOutside(false);
+        pb.setMessage("Loading...");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SharedPreferences prefs = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
         clientId = prefs.getString("UserID", "UserID Not Found!") + 7;
 
-        messageBody = (EditText) findViewById(R.id.edittext_chatbox);
-        messageBody.setText("");
-        btnSend = (Button) findViewById(R.id.button_chatbox_send);
 
-        pb = new ProgressDialog(this);
-        pb.setCanceledOnTouchOutside(false);
-        pb.setMessage("Loading...");
-
-        mMessageRecycler = (RecyclerView) findViewById(R.id.privatechatRV);
+        mMessageRecycler = (RecyclerView) findViewById(R.id.myListedPrivateChat);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(false);
         linearLayoutManager.setStackFromEnd(true);
         mMessageRecycler.setLayoutManager(linearLayoutManager);
 
-        privateChatAdapter = new PrivateChatAdapter(this, ml);
-        privateChatAdapter.setID(clientId);
-        mMessageRecycler.setAdapter(privateChatAdapter);
+        adapter = new ListedPrivateChatAdapter(this, list);
+        mMessageRecycler.setAdapter(adapter);
     }
 
     public void Connect() throws Exception {
@@ -120,21 +96,8 @@ public class PrivateChatList extends AppCompatActivity {
 
                 if(receiverClientID.equals(clientId)){
                     if(command.equals("004835")){
-                        SetData(mqttMessage.toString());
-                    }
-                }
 
-                if(command.equals("004833")){
-                    if(receiverClientID.equals(clientId)){
-                        ml.add(new PrivateChat(value[8],value[4],value[5],value[6],value[7]));
-                        privateChatAdapter.setID(clientId);
-                        privateChatAdapter.notifyDataSetChanged();
-                    }else if(receiverClientID.equals(value[6]+7) && (value[7]+7).equals(clientId)){
-                        ml.add(new PrivateChat(value[8],value[4],value[5],value[6],value[7]));
-                        privateChatAdapter.setID(clientId);
-                        privateChatAdapter.notifyDataSetChanged();
                     }
-
                 }
             }
 
@@ -143,6 +106,8 @@ public class PrivateChatList extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     public void Subscribe() {
@@ -163,11 +128,6 @@ public class PrivateChatList extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        System.out.println(item.getItemId());
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onResume() {
@@ -175,7 +135,7 @@ public class PrivateChatList extends AppCompatActivity {
         pb.show();
         try {
             Connect();
-                pb.dismiss();
+            pb.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -191,70 +151,18 @@ public class PrivateChatList extends AppCompatActivity {
         }
     }
 
-    public void send(View v) throws Exception {
-        String newContent = messageBody.getText().toString();
-        //check is empty body
-        if(newContent.compareTo("") == 0 && newContent == null){
-            Toast.makeText(this, "Please Enter Message!!", Toast.LENGTH_LONG).show();
-            return;
-        }else if(newContent.length() > 999 ){
-            Toast.makeText(this, "Text is too long", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        String command = "004833";
-        String reserve = "000000000000000000000000";
-        String senderClientId = clientId;
-        String receiverClientId = "server";
-
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        Date date = new Date();
-
-        String sentTime = formatter.format(date);
-        String sender = clientId.substring(0, clientId.length() -1);
-        Intent intent = getIntent();
-        String receiver = intent.getStringExtra("lodgingOwner").replace("Owner ID: ",""); //lodging owner
-        String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId,newContent,sentTime, sender, receiver});
-
-        if(sender.compareTo(receiver) == 0){
-            Toast.makeText(this, "YOU CANNOT SEND TO YOURSELF..!",Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        Publish(payload);
-    }
-
-    public void SetData(String message) throws Exception{
-        ml.clear();
-        String datas[] = message.toString().split("\\$");
-        for (String tempDatas: datas){
-            if(tempDatas.charAt(tempDatas.length()-1) == '\\'){
-                tempDatas = tempDatas.substring(0,tempDatas.length()-1);
-            }
-            String[] data = c.convertToString(tempDatas);
-            if(!(data[0].compareTo("004835") == 0)){
-                Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
-                ml.add(message1);
-                privateChatAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
-
-    public void Retrieve() {
+    public void Retrieve(){
         String command = "004835";
         String reserve = "000000000000000000000000";
         String senderClientId = clientId;//change to client id later
         String receiverClientId = "server";
         String sender = clientId.substring(0, clientId.length() -1);
-        Intent intent = getIntent();
-        String receiverID = intent.getStringExtra("lodgingOwner").replace("Owner ID: ",""); //lodging owner
 
-        String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, sender, receiverID});
+        String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, sender});
         Publish(payload);
-
     }
 
+    public void SetData(String message){
+
+    }
 }
-
-
