@@ -97,7 +97,7 @@ public class UpdateLodging extends AppCompatActivity {
                             String command = c.ToHex("004811");
                             String reserve = c.ToHex("000000000000000000000000");
                             String senderClientId = c.ToHex(clientId);
-                            String receiverClientId = c.ToHex("server");
+                            String receiverClientId = c.ToHex("serverLSSserver");
                             String lodgingId = c.ToHex(getIntent().getStringExtra("LodgingID"));
                             String title = c.ToHex(l.getTitle());
                             String address = c.ToHex(l.getAddress());
@@ -135,7 +135,7 @@ public class UpdateLodging extends AppCompatActivity {
                 String command = c.ToHex("004809");
                 String reserve = c.ToHex("000000000000000000000000");
                 String senderClientId = c.ToHex(clientId);
-                String receiverClientId = c.ToHex("server");
+                String receiverClientId = c.ToHex("serverLSSserver");
                 String lodgingId = c.ToHex(getIntent().getStringExtra("LodgingID"));
                 String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/"
                         + lodgingId;

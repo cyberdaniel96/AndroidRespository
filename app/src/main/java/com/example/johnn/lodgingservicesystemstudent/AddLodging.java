@@ -93,7 +93,7 @@ public class AddLodging extends AppCompatActivity {
                     String command = c.ToHex("004808");
                     String reserve = c.ToHex("000000000000000000000000");
                     String senderClientId = c.ToHex(clientId);
-                    String receiverClientId = c.ToHex("server");
+                    String receiverClientId = c.ToHex("serverLSSserver");
                     String title = c.ToHex(l.getTitle());
                     String address = c.ToHex(l.getAddress());
                     String price = c.ToHex(l.getPrice() + "");

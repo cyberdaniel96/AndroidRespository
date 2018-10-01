@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -17,9 +20,11 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import domain.Message;
 import domain.PrivateChat;
@@ -39,6 +44,10 @@ public class Listed_Private_Chat extends AppCompatActivity {
     ListedPrivateChatAdapter adapter;
     private RecyclerView mMessageRecycler;
     List<Message> list = new ArrayList<>();
+
+
+
+    TextView nametxt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +59,31 @@ public class Listed_Private_Chat extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
         clientId = prefs.getString("UserID", "UserID Not Found!") + 7;
 
+        nametxt = (TextView)findViewById(R.id.nametxt);
+
 
         mMessageRecycler = (RecyclerView) findViewById(R.id.myListedPrivateChat);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(false);
-        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setStackFromEnd(false);
         mMessageRecycler.setLayoutManager(linearLayoutManager);
 
         adapter = new ListedPrivateChatAdapter(this, list);
         mMessageRecycler.setAdapter(adapter);
+        pb.dismiss();
+
+        adapter.setOnItemClickListener(new ListedPrivateChatAdapter.MyOnClick() {
+            @Override
+            public void onItemClick(int position, View v) {
+                Intent intent = new Intent(Listed_Private_Chat.this, PrivateChatList.class);
+                Message message2 = (PrivateChat)list.get(position);
+                intent.putExtra("lodgingOwner",((PrivateChat) message2).getReceiverID());
+                Toast.makeText(getApplication(), ((PrivateChat) message2).getReceiverID(), Toast.LENGTH_LONG).show();
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     public void Connect() throws Exception {
@@ -97,6 +122,7 @@ public class Listed_Private_Chat extends AppCompatActivity {
                 if(receiverClientID.equals(clientId)){
                     if(command.equals("004835")){
 
+                        SetData(mqttMessage.toString());
                     }
                 }
             }
@@ -132,7 +158,7 @@ public class Listed_Private_Chat extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        pb.show();
+//        pb.show();
         try {
             Connect();
             pb.dismiss();
@@ -155,14 +181,36 @@ public class Listed_Private_Chat extends AppCompatActivity {
         String command = "004835";
         String reserve = "000000000000000000000000";
         String senderClientId = clientId;//change to client id later
-        String receiverClientId = "server";
+        String receiverClientId = "serverLSSserver";
         String sender = clientId.substring(0, clientId.length() -1);
 
-        String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, sender});
+        String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, sender,"none"});
         Publish(payload);
     }
 
     public void SetData(String message){
+        list.clear();
+        List<String> temp = new ArrayList<>();
+        String datas[] = message.toString().split("\\$");
+        for (String tempDatas: datas){
+            if(tempDatas.charAt(tempDatas.length()-1) == '\\'){
+                tempDatas = tempDatas.substring(0,tempDatas.length()-1);
+            }
+            String[] data = c.convertToString(tempDatas);
+            if(!(data[0].compareTo("004835") == 0)){
+                Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
+                String tempvalue = "http://192.168.0.153/img/User/"+data[4]+".jpg";
 
+                if(!temp.contains(tempvalue)){
+                    temp.add(tempvalue);
+                    message1.setImage(tempvalue);
+                    list.add(message1);
+                    adapter.notifyDataSetChanged();
+
+                }
+
+
+            }
+        }
     }
 }

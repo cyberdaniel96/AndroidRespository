@@ -67,7 +67,7 @@ public class Feedback extends AppCompatActivity {
             String command = c.ToHex("004822");
             String reserve = c.ToHex("000000000000000000000000");
             String senderClientId = c.ToHex(clientId);
-            String receiverClientId = c.ToHex("server");
+            String receiverClientId = c.ToHex("serverLSSserver");
 
             String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/" +
                     c.ToHex(getIntent().getStringExtra("Email")) + "/" + c.ToHex(feedbackType.getSelectedItem().toString()) + "/" +

@@ -1,6 +1,7 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,18 +22,20 @@ public class ListedPrivateChatAdapter extends RecyclerView.Adapter {
     private Context context;
     private List<Message> list;
 
+    private static MyOnClick clickListener;
+
     public ListedPrivateChatAdapter(Context context, List<Message> list){
         this.context = context;
         this.list = list;
     }
 
-    private class ViewHolder extends RecyclerView.ViewHolder{
+    private class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView img;
         TextView name;
 
         ViewHolder(View itemView){
             super(itemView);
-
+            itemView.setOnClickListener(this);
             img = (ImageView)itemView.findViewById(R.id.profileImg);
             name = (TextView)itemView.findViewById(R.id.nametxt);
         }
@@ -49,8 +52,21 @@ public class ListedPrivateChatAdapter extends RecyclerView.Adapter {
             name.setText(((PrivateChat) msg).getReceiverID());
         }
 
+        @Override
+        public void onClick(View view) {
+            clickListener.onItemClick(getAdapterPosition(), view);
+
+
+        }
     }
 
+    public interface MyOnClick{
+        void onItemClick(int position, View v);
+    }
+
+    public void setOnItemClickListener(MyOnClick myOnClick){
+        ListedPrivateChatAdapter.clickListener = myOnClick;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

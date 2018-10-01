@@ -124,6 +124,7 @@ public class Login extends AppCompatActivity {
 
                             SharedPreferences.Editor editor = getSharedPreferences("LoggedInUser", MODE_PRIVATE).edit();
                             editor.putString("UserID", userId);
+
                             editor.apply();
                             Toast.makeText(getBaseContext(),c.ToString(datas[7]),Toast.LENGTH_LONG).show();
                             Intent in = new Intent(Login.this, PrivateChatList.class);
@@ -172,7 +173,7 @@ public class Login extends AppCompatActivity {
         String command = c.ToHex("004803");
         String reserve = c.ToHex("000000000000000000000000");
         String senderClientId = c.ToHex(clientId);
-        String receiverClientId = c.ToHex("server");
+        String receiverClientId = c.ToHex("serverLSSserver");
         int error = 0;
         if (userId.getText().toString().length() == 0) {
             userId.setError("Please enter your User ID.");

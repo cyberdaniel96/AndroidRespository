@@ -94,7 +94,7 @@ public class Home extends AppCompatActivity
                 String command = c.ToHex("004817");
                 String reserve = c.ToHex("000000000000000000000000");
                 String senderClientId = c.ToHex(clientId);
-                String receiverClientId = c.ToHex("server");
+                String receiverClientId = c.ToHex("serverLSSserver");
                 String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/" + c.ToHex(query);
                 Publish(payload);
                 pb.show();
@@ -202,7 +202,7 @@ public class Home extends AppCompatActivity
         String command = c.ToHex("004807");
         String reserve = c.ToHex("000000000000000000000000");
         String senderClientId = c.ToHex(clientId);
-        String receiverClientId = c.ToHex("server");
+        String receiverClientId = c.ToHex("serverLSSserver");
         String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId;
         Publish(payload);
     }

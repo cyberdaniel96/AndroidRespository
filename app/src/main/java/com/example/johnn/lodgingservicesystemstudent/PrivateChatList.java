@@ -66,6 +66,26 @@ public class PrivateChatList extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
         clientId = prefs.getString("UserID", "UserID Not Found!") + 7;
 
+        //start
+
+        Intent intent1 = getIntent();
+
+        try{
+            String value = intent1.getStringExtra("Launched");
+            if(value == null && !value.equals(value) && value.isEmpty()){
+
+
+                startActivity(intent1);
+            }
+        }catch(Exception ex){
+            Intent intent = new Intent(this, PrivateChat.class);
+            intent.putExtra("Launched", "YES");
+        }
+
+
+
+        //end
+
         messageBody = (EditText) findViewById(R.id.edittext_chatbox);
         messageBody.setText("");
         btnSend = (Button) findViewById(R.id.button_chatbox_send);
@@ -83,6 +103,7 @@ public class PrivateChatList extends AppCompatActivity {
         privateChatAdapter = new PrivateChatAdapter(this, ml);
         privateChatAdapter.setID(clientId);
         mMessageRecycler.setAdapter(privateChatAdapter);
+
     }
 
     public void Connect() throws Exception {
@@ -93,19 +114,20 @@ public class PrivateChatList extends AppCompatActivity {
         client.connect(connOpts, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
+                //Toast.makeText(getApplication(), "onSuccess", Toast.LENGTH_LONG).show();
                 Subscribe();
                 Retrieve();
             }
 
             @Override
             public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-
+                //Toast.makeText(getApplication(), "onFailure", Toast.LENGTH_LONG).show();
             }
         });
         client.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable throwable) {
-
+              //  Toast.makeText(getApplication(), "connectionLost", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -140,7 +162,7 @@ public class PrivateChatList extends AppCompatActivity {
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
+                //Toast.makeText(getApplication(), "deliveryComplete", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -175,7 +197,6 @@ public class PrivateChatList extends AppCompatActivity {
         pb.show();
         try {
             Connect();
-                pb.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -205,7 +226,7 @@ public class PrivateChatList extends AppCompatActivity {
         String command = "004833";
         String reserve = "000000000000000000000000";
         String senderClientId = clientId;
-        String receiverClientId = "server";
+        String receiverClientId = "serverLSSserver";
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date date = new Date();
@@ -226,6 +247,7 @@ public class PrivateChatList extends AppCompatActivity {
 
     public void SetData(String message) throws Exception{
         ml.clear();
+        pb.show();
         String datas[] = message.toString().split("\\$");
         for (String tempDatas: datas){
             if(tempDatas.charAt(tempDatas.length()-1) == '\\'){
@@ -238,6 +260,7 @@ public class PrivateChatList extends AppCompatActivity {
                 privateChatAdapter.notifyDataSetChanged();
             }
         }
+        pb.dismiss();
     }
 
 
@@ -245,15 +268,17 @@ public class PrivateChatList extends AppCompatActivity {
         String command = "004835";
         String reserve = "000000000000000000000000";
         String senderClientId = clientId;//change to client id later
-        String receiverClientId = "server";
+        String receiverClientId = "serverLSSserver";
         String sender = clientId.substring(0, clientId.length() -1);
         Intent intent = getIntent();
         String receiverID = intent.getStringExtra("lodgingOwner").replace("Owner ID: ",""); //lodging owner
-
+        System.out.println(receiverID);
         String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, sender, receiverID});
         Publish(payload);
 
     }
+
+
 
 }
 

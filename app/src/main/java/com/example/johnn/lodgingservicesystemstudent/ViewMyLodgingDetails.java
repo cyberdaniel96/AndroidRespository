@@ -61,7 +61,7 @@ public class ViewMyLodgingDetails extends AppCompatActivity {
                 String command = c.ToHex("004821");
                 String reserve = c.ToHex("000000000000000000000000");
                 String senderClientId = c.ToHex(clientId);
-                String receiverClientId = c.ToHex("server");
+                String receiverClientId = c.ToHex("serverLSSserver");
                 String lodgingId = c.ToHex(getIntent().getStringExtra("LodgingID"));
                 String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/" + lodgingId;
                 Publish(payload);
@@ -97,7 +97,7 @@ public class ViewMyLodgingDetails extends AppCompatActivity {
                 String command = c.ToHex("004809");
                 String reserve = c.ToHex("000000000000000000000000");
                 String senderClientId = c.ToHex(clientId);
-                String receiverClientId = c.ToHex("server");
+                String receiverClientId = c.ToHex("serverLSSserver");
                 String lodgingId = c.ToHex(getIntent().getStringExtra("LodgingID"));
                 String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/" + lodgingId;
                 Publish(payload);

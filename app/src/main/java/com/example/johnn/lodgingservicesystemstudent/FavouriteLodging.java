@@ -69,7 +69,7 @@ public class FavouriteLodging extends AppCompatActivity {
                 String command = c.ToHex("004819");
                 String reserve = c.ToHex("000000000000000000000000");
                 String senderClientId = c.ToHex(clientId);
-                String receiverClientId = c.ToHex("server");
+                String receiverClientId = c.ToHex("serverLSSserver");
                 String userId = c.ToHex(getIntent().getStringExtra("UserID"));
                 String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/" + userId;
                 Publish(payload);

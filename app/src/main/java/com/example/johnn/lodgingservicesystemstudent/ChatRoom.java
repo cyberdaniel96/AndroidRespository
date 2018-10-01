@@ -89,7 +89,7 @@ public class ChatRoom extends AppCompatActivity {
                     String command = c.ToHex("004813");
                     String reserve = c.ToHex("000000000000000000000000");
                     String senderClientId = c.ToHex(clientId);
-                    String receiverClientId = c.ToHex("server");
+                    String receiverClientId = c.ToHex("serverLSSserver");
                     String lodgingId = c.ToHex(getIntent().getStringExtra("LodgingID"));
                     String content = c.ToHex(message.getText().toString());
                     String userId = c.ToHex(getIntent().getStringExtra("UserID"));
@@ -205,7 +205,7 @@ public class ChatRoom extends AppCompatActivity {
         String command = c.ToHex("004812");
         String reserve = c.ToHex("000000000000000000000000");
         String senderClientId = c.ToHex(clientId);
-        String receiverClientId = c.ToHex("server");
+        String receiverClientId = c.ToHex("serverLSSserver");
         String lodgingId = c.ToHex(getIntent().getStringExtra("LodgingID"));
         String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/" + lodgingId;
         Publish(payload);
@@ -280,7 +280,7 @@ public class ChatRoom extends AppCompatActivity {
             String command = c.ToHex("004821");
             String reserve = c.ToHex("000000000000000000000000");
             String senderClientId = c.ToHex(clientId);
-            String receiverClientId = c.ToHex("server");
+            String receiverClientId = c.ToHex("serverLSSserver");
             String lodgingId = c.ToHex(getIntent().getStringExtra("LodgingID"));
             String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/" + lodgingId;
             Publish(payload);

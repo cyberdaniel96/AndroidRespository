@@ -70,7 +70,7 @@ public class ViewMessage extends AppCompatActivity {
                         String command = c.ToHex("004816");
                         String reserve = c.ToHex("000000000000000000000000");
                         String senderClientId = c.ToHex(clientId);
-                        String receiverClientId = c.ToHex("server");
+                        String receiverClientId = c.ToHex("serverLSSserver");
                         String messageId = c.ToHex(getIntent().getStringExtra("MessageID"));
                         String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/"
                                 + messageId + "/" + c.ToHex(content.getText().toString());
@@ -94,7 +94,7 @@ public class ViewMessage extends AppCompatActivity {
                         String command = c.ToHex("004815");
                         String reserve = c.ToHex("000000000000000000000000");
                         String senderClientId = c.ToHex(clientId);
-                        String receiverClientId = c.ToHex("server");
+                        String receiverClientId = c.ToHex("serverLSSserver");
                         String messageId = c.ToHex(getIntent().getStringExtra("MessageID"));
                         String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/"
                                 + messageId;
@@ -126,7 +126,7 @@ public class ViewMessage extends AppCompatActivity {
                 String command = c.ToHex("004814");
                 String reserve = c.ToHex("000000000000000000000000");
                 String senderClientId = c.ToHex(clientId);
-                String receiverClientId = c.ToHex("server");
+                String receiverClientId = c.ToHex("serverLSSserver");
                 String messageId = c.ToHex(getIntent().getStringExtra("MessageID"));
                 String payload = command + "/" + reserve + "/" + senderClientId + "/" + receiverClientId + "/"
                         + messageId;
