@@ -114,12 +114,12 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
     @Override
     public int getItemViewType(int position) {
         Message message = (PrivateChat) messageList.get(position);
-        System.out.println(id);
+        //System.out.println(id);
        if(id.equals(((PrivateChat) message).getSenderID())) {
-           System.out.println("Sender SET");
+           //System.out.println("Sender SET");
            return VIEW_TYPE_MESSAGE_SENT;
        }else{
-           System.out.println("Receiver SET");
+           //System.out.println("Receiver SET");
            return VIEW_TYPE_MESSAGE_RECEIVED;
        }
     }

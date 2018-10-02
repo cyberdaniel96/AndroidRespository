@@ -121,7 +121,6 @@ public class Listed_Private_Chat extends AppCompatActivity {
 
                 if(receiverClientID.equals(clientId)){
                     if(command.equals("004835")){
-
                         SetData(mqttMessage.toString());
                     }
                 }
@@ -201,15 +200,41 @@ public class Listed_Private_Chat extends AppCompatActivity {
                 Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
                 String tempvalue = "http://192.168.0.153/img/User/"+data[4]+".jpg";
 
-                if(!temp.contains(tempvalue)){
-                    temp.add(tempvalue);
-                    message1.setImage(tempvalue);
-                    list.add(message1);
-                    adapter.notifyDataSetChanged();
+                //delStatus: determine who delete the chat
+                if(data[5].compareTo("NOTHING") != 0){
+                    String[] value = data[5].split("AND");
+                    int length = value.length;
+                    if(length == 1){
+                        if(!value[0].equals(clientId.substring(0, clientId.length()-1))){//who deleted the room
+                            if(!temp.contains(tempvalue)){
+                                temp.add(tempvalue);
+                                message1.setImage(tempvalue);
+                                list.add(message1);
+                            }
+                        }
+                    }
 
+                    if(length == 2){
+                        String compa = data[3]+"AND"+data[4];
+                        String compa2 = data[4]+"AND"+data[3];
+                        if(compa.equals(data[5]) || compa2.equals(data[5])){
+
+                        }else{
+                            if(!temp.contains(tempvalue)){
+                                temp.add(tempvalue);
+                                message1.setImage(tempvalue);
+                                list.add(message1);
+                            }
+                        }
+                    }
+                }else{
+                    if(!temp.contains(tempvalue)){
+                        temp.add(tempvalue);
+                        message1.setImage(tempvalue);
+                        list.add(message1);
+                    }
                 }
-
-
+                adapter.notifyDataSetChanged();
             }
         }
     }

@@ -255,11 +255,35 @@ public class PrivateChatList extends AppCompatActivity {
             }
             String[] data = c.convertToString(tempDatas);
             if(!(data[0].compareTo("004835") == 0)){
-                Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
-                ml.add(message1);
-                privateChatAdapter.notifyDataSetChanged();
+                if(data[5].compareTo("NOTHING") != 0){
+                    String[] value = data[5].split("AND");
+                    String myID = clientId.substring(0, clientId.length()-1);
+                    int length = value.length;
+                    if(length == 1){
+                        if(!value[0].equals(myID)){//"myID" deleted the chat
+                            Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
+                            ml.add(message1);
+                        }
+                    }
+
+                    if(length == 2){
+                        String compa = data[3]+"AND"+data[4];
+                        String compa2 = data[4]+"AND"+data[3];
+                        if(compa.equals(data[5]) || compa2.equals(data[5])){
+
+                        }else{
+                            Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
+                            ml.add(message1);
+                        }
+                    }
+                }else {
+                    Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
+                    ml.add(message1);
+                }
             }
         }
+        privateChatAdapter.notifyDataSetChanged();
+
         pb.dismiss();
     }
 
