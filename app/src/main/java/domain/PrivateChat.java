@@ -12,7 +12,7 @@ package domain;
 public class PrivateChat extends Message{
     private String senderID;
     private String receiverID;
-
+    private String delStatus;
     public PrivateChat(String messageID, String content, String sentTime,String senderID, String receiverID) {
         super(messageID, content, sentTime);
         this.senderID = senderID;
@@ -33,6 +33,14 @@ public class PrivateChat extends Message{
 
     public void setReceiverID(String receiverID) {
         this.receiverID = receiverID;
+    }
+
+    public String getDelStatus() {
+        return delStatus;
+    }
+
+    public void setDelStatus(String delStatus) {
+        this.delStatus = delStatus;
     }
 
     @Override

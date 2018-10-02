@@ -1,12 +1,15 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -44,7 +47,7 @@ public class Listed_Private_Chat extends AppCompatActivity {
     ListedPrivateChatAdapter adapter;
     private RecyclerView mMessageRecycler;
     List<Message> list = new ArrayList<>();
-
+    List<Message> tempList = new ArrayList<>();
 
 
     TextView nametxt;
@@ -83,6 +86,35 @@ public class Listed_Private_Chat extends AppCompatActivity {
             }
         });
 
+        adapter.setOnItemLongClickListener(new ListedPrivateChatAdapter.MyOnLongClick() {
+            @Override
+            public boolean onItemLongClick(final int position, View v) {
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(Listed_Private_Chat.this);
+                alert.setTitle("Deleting Message");
+                alert.setMessage(Html.fromHtml("<font color='#FF7F27'>Are you sure you want to delete??</font>"));
+                alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PrivateChat chat = (PrivateChat) list.get(position);
+                        Retrieve(chat.getReceiverID());
+
+
+                    }
+                });
+                alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+                return true;
+            }
+        });
 
     }
 
@@ -117,11 +149,13 @@ public class Listed_Private_Chat extends AppCompatActivity {
                 String[] head = datas[0].split("/");
                 String command = c.ToString(head[0]);
                 String receiverClientID =  c.ToString(head[3]);
-                String[] value = c.convertToString(datas[0]);
-
                 if(receiverClientID.equals(clientId)){
                     if(command.equals("004835")){
-                        SetData(mqttMessage.toString());
+                        if(list.isEmpty() && list.size() == 0) {
+                            SetData(mqttMessage.toString());
+                        }else{
+                            addData(mqttMessage.toString());
+                        }
                     }
                 }
             }
@@ -176,14 +210,79 @@ public class Listed_Private_Chat extends AppCompatActivity {
         }
     }
 
-    public void Retrieve(){
+    public void Retrieve() {
         String command = "004835";
         String reserve = "000000000000000000000000";
         String senderClientId = clientId;//change to client id later
         String receiverClientId = "serverLSSserver";
-        String sender = clientId.substring(0, clientId.length() -1);
+        String sender = clientId.substring(0, clientId.length() - 1);
 
-        String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, sender,"none"});
+        String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, sender, "none"});
+        Publish(payload);
+    }
+
+    public void Retrieve(String receiver){
+        String command = "004835";
+        String reserve = "000000000000000000000000";
+        String senderClientId = clientId;//change to client id later
+        String receiverClientId = "serverLSSserver";
+        String sender = clientId.substring(0, clientId.length() - 1);
+
+        String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, sender, receiver});
+        Publish(payload);
+    }
+
+    public void addData(String message){
+        tempList.clear();
+        String datas[] = message.toString().split("\\$");
+
+        for(String tempDatas: datas){
+            if(tempDatas.charAt(tempDatas.length()-1) == '\\'){
+                tempDatas = tempDatas.substring(0,tempDatas.length()-1);
+            }
+            String[] data = c.convertToString(tempDatas);
+            if(!(data[0].compareTo("004835") == 0)){
+                Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
+                ((PrivateChat) message1).setDelStatus(data[5]);
+                tempList.add(message1);
+            }
+        }
+        performDelete();
+    }
+
+    public void performDelete() {
+        StringBuilder temp = new StringBuilder("");
+        PrivateChat chat;
+        String status = "";
+
+        for (int index = 0; index < tempList.size(); index++) {
+            chat = (PrivateChat) tempList.get(index);
+            status = chat.getDelStatus();
+            if(status.equals("NOTHING") || status.equals(chat.getReceiverID()+"AND") || status.equals(chat.getSenderID()+"AND")) {
+                if (!(index == tempList.size() - 1)) {
+                    temp.append(c.ToHex(chat.getMessageId())+"/");
+                    //temp.append(chat.getMessageId() + "/");
+                } else {
+                    temp.append(c.ToHex(chat.getMessageId()));
+                    //temp.append(chat.getMessageId());
+                }
+            }
+        }
+        String allID = temp.toString();
+        String first = c.convertToHex(new String[]{"004837", "000000000000000000000000", clientId, "serverLSSserver"});
+        if (status.compareTo("NOTHING") == 0) {
+            status = clientId.substring(0, clientId.length() - 1) + "AND";
+        } else {
+            String[] operator = status.split("AND");
+            int operatorLength = operator.length;
+
+            if (operatorLength == 1) {
+                status = operator[0] + "AND" + clientId.substring(0, clientId.length() - 1);
+            }
+        }
+
+
+        String payload = first + "/" + c.ToHex(status) + "/" + allID;
         Publish(payload);
     }
 
@@ -198,6 +297,8 @@ public class Listed_Private_Chat extends AppCompatActivity {
             String[] data = c.convertToString(tempDatas);
             if(!(data[0].compareTo("004835") == 0)){
                 Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
+                ((PrivateChat) message1).setDelStatus(data[5]);
+
                 String tempvalue = "http://192.168.0.153/img/User/"+data[4]+".jpg";
 
                 //delStatus: determine who delete the chat
@@ -234,6 +335,7 @@ public class Listed_Private_Chat extends AppCompatActivity {
                         list.add(message1);
                     }
                 }
+
                 adapter.notifyDataSetChanged();
             }
         }

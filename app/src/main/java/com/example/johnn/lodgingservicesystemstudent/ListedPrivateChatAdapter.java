@@ -23,19 +23,20 @@ public class ListedPrivateChatAdapter extends RecyclerView.Adapter {
     private List<Message> list;
 
     private static MyOnClick clickListener;
-
+    private static MyOnLongClick onLongClickListener;
     public ListedPrivateChatAdapter(Context context, List<Message> list){
         this.context = context;
         this.list = list;
     }
 
-    private class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         ImageView img;
         TextView name;
 
         ViewHolder(View itemView){
             super(itemView);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
             img = (ImageView)itemView.findViewById(R.id.profileImg);
             name = (TextView)itemView.findViewById(R.id.nametxt);
         }
@@ -58,14 +59,28 @@ public class ListedPrivateChatAdapter extends RecyclerView.Adapter {
 
 
         }
+
+        @Override
+        public boolean onLongClick(View v) {
+            onLongClickListener.onItemLongClick(getAdapterPosition(), v);
+            return true;
+        }
     }
 
     public interface MyOnClick{
         void onItemClick(int position, View v);
     }
 
+    public interface MyOnLongClick{
+        boolean onItemLongClick(int position, View v);
+    }
+
     public void setOnItemClickListener(MyOnClick myOnClick){
         ListedPrivateChatAdapter.clickListener = myOnClick;
+    }
+
+    public void setOnItemLongClickListener(MyOnLongClick myOnLongClick){
+        ListedPrivateChatAdapter.onLongClickListener = myOnLongClick;
     }
 
     @Override
