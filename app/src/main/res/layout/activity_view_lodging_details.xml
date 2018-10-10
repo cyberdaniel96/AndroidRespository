@@ -139,6 +139,15 @@
                 android:onClick="navToPrivateChat"
                 android:text="@string/private_chat" />
 
+            <Button
+                android:id="@+id/btnMakeAppointment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/privateChat"
+                android:drawableStart="@drawable/ic_chat_black_18dp"
+                android:onClick="btnMakeAppointment"
+                android:text="@string/make_appointment" />
+
         </RelativeLayout>
     </ScrollView>
 

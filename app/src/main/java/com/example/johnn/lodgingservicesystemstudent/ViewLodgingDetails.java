@@ -176,6 +176,15 @@ public class ViewLodgingDetails extends AppCompatActivity {
         }
     }
 
+    public void btnMakeAppointment(View view){
+        Intent intent = new Intent(this, CreateAppointment.class);
+        intent.putExtra("clientID", getIntent().getStringExtra("UserID"));
+        intent.putExtra("lodgingID",getIntent().getStringExtra("LodgingID"));
+        TextView textView = (TextView)findViewById(R.id.logingOwner);
+        intent.putExtra("ownerID", textView.getText().toString().replace("Owner ID: ", ""));
+        startActivity(intent);
+    }
+
     public void SetData(String message) {
 
         String[] datas = message.split("/");

@@ -2,6 +2,7 @@ package com.example.johnn.lodgingservicesystemstudent;
 
 import android.app.Application;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -60,7 +61,11 @@ public class CreateAppointment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_appointment);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        clientID =  "16104808";
+        Intent intent = getIntent();
+
+
+
+        clientID =  intent.getStringExtra("clientID") + "8";
         serverID = "serverLSSserver";
         pb = new ProgressDialog(this);
         pb.setCanceledOnTouchOutside(false);
@@ -77,6 +82,9 @@ public class CreateAppointment extends AppCompatActivity {
         txtstatus = (TextView)findViewById(R.id.txtStatus);
         txtcomment = (EditText)findViewById(R.id.txtComment);
 
+        txtownerID.setText(""+intent.getStringExtra("ownerID"));
+        txttenantID.setText(""+intent.getStringExtra("clientID"));
+        txtlodgingID.setText(""+intent.getStringExtra("lodgingID"));
         //start:temporary data
         List<String> dateList = new ArrayList<>();
         dateList.add("10/10/2018");
@@ -95,16 +103,17 @@ public class CreateAppointment extends AppCompatActivity {
         dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTime.setAdapter(timeAdapter);
 
-        List<String> state = new ArrayList<>();
-        try {
-            String temp = "MalaysiaState.xsd".replace("/", "");
-            DOMParserReader reader = new DOMParserReader(temp);
-            System.out.println(reader.getNodeName());
-        } catch (Exception e) {
-            System.out.println(e.toString());
+        List<String> stateList = new ArrayList<>();
+        String[] stateResourceArr = getResources().getStringArray(R.array.state);
+        for(String tempData: stateResourceArr){
+            String[] stateSplit = tempData.split("-");
+            stateList.add(stateSplit[0]);
         }
-        //end:temporary data
 
+        String[] stateArr = stateList.toArray(new String[stateList.size()]);
+        ArrayAdapter<String> stateAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, stateArr);
+        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinLocation.setAdapter(stateAdapter);
 
     }
 
