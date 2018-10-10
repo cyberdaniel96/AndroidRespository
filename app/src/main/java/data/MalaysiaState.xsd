@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<country>
+    <state>
+        <name>Penang</name>
+        <priority>5</priority>
+    </state>
+    <state>
+        <name>Selangor</name>
+        <priority>10</priority>
+    </state>
+    <state>
+        <name>Johor</name>
+        <priority>2</priority>
+    </state>
+    <state>
+        <name>Sabah</name>
+        <priority>1</priority>
+    </state>
+    <state>
+        <name>Sarawak</name>
+        <priority>1</priority>
+    </state>
+    <state>
+        <name>Malacca</name>
+        <priority>8</priority>
+    </state>
+    <state>
+        <name>Perak</name>
+        <priority>7</priority>
+    </state>
+    <state>
+        <name>Kedah</name>
+        <priority>3</priority>
+    </state>
+    <state>
+        <name>Terengganu</name>
+        <priority>6</priority>
+    </state>
+    <state>
+        <name>Pahang</name>
+        <priority>7</priority>
+    </state>
+    <state>
+        <name>Kelantan</name>
+        <priority>4</priority>
+    </state>
+    <state>
+        <name>Negeri Sembilan</name>
+        <priority>9</priority>
+    </state>
+    <state>
+        <name>Perlis</name>
+        <priority>2</priority>
+    </state>
+</country>
