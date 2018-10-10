@@ -54,6 +54,22 @@
         <item>Improvement</item>
     </string-array>
 
+    <string-array name="state">
+        <item>Penang-5</item>
+        <item>Selangor-10</item>
+        <item>Johor-2</item>
+        <item>Sabah-1</item>
+        <item>Sarawak-1</item>
+        <item>Malacca-8</item>
+        <item>Perak-7</item>
+        <item>Kedah-3</item>
+        <item>Terengganu-6</item>
+        <item>Pahang-7</item>
+        <item>Kelantan-4</item>
+        <item>Negeri Sembilan-9</item>
+        <item>Perlis-2</item>
+    </string-array>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="private_chat">Private Chat</string>

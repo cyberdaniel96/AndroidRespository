@@ -5,6 +5,10 @@
  */
 package domain;
 
+import android.net.Uri;
+
+import java.net.URL;
+
 /**
  *
  * @author Daniel
@@ -49,4 +53,6 @@ public class PrivateChat extends Message{
                 "Receiver ID : " + this.receiverID + "\n\n";
         return super.toString() + result;
     }
+
+
 }

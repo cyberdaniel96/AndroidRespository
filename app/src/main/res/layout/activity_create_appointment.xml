@@ -36,18 +36,19 @@
             android:text="A1000000" />
 
         <Spinner
-            android:id="@+id/viewDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:id="@+id/spinDate"
+            android:layout_width="164dp"
+            android:layout_height="40dp"
             android:layout_below="@id/viewAppointmentID"
             android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/viewTime"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@+id/spinTime"
             android:padding="10dp" />
 
         <Spinner
-            android:id="@id/viewTime"
-            android:layout_width="96dp"
-            android:layout_height="wrap_content"
+            android:id="@id/spinTime"
+            android:layout_width="162dp"
+            android:layout_height="40dp"
             android:layout_below="@id/viewAppointmentID"
             android:layout_alignParentRight="true"
             android:padding="10dp" />
@@ -56,7 +57,7 @@
             android:id="@+id/viewLocation"
             android:layout_width="157dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/viewDate"
+            android:layout_below="@id/spinDate"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
             android:text="@string/location" />
@@ -65,7 +66,7 @@
             android:id="@id/spinnerLocation"
             android:layout_width="172dp"
             android:layout_height="38dp"
-            android:layout_below="@id/viewTime"
+            android:layout_below="@id/spinTime"
             android:layout_alignParentRight="true"
             android:padding="10dp" />
 

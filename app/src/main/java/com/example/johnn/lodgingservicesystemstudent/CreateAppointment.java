@@ -1,13 +1,208 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
+import android.app.Application;
+import android.app.ProgressDialog;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
+import java.io.File;
+import java.nio.file.FileSystem;
+import java.util.ArrayList;
+import java.util.List;
+
+import service.Converter;
 
 public class CreateAppointment extends AppCompatActivity {
+
+
+    MqttAndroidClient client;
+    String topic = "MY/TARUC/LSS/000000001/PUB";
+    int qos = 1;
+    String broker = "tcp://test.mosquitto.org:1883";
+    MemoryPersistence persistence = new MemoryPersistence();
+    final Converter c = new Converter();
+    ProgressDialog pb;
+
+
+    String clientID = "";
+    String serverID = "";
+
+    TextView txtAppointmentID;
+    Spinner spinDate;
+    Spinner spinTime;
+    Spinner spinLocation;
+    String txtDate = "";
+    String txtTime = "";
+    String txtLocation = "";
+    TextView txtownerID;
+    TextView txttenantID;
+    TextView txtlodgingID;
+    TextView txtstatus;
+    EditText txtcomment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_appointment);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        clientID =  "16104808";
+        serverID = "serverLSSserver";
+        pb = new ProgressDialog(this);
+        pb.setCanceledOnTouchOutside(false);
+        pb.setMessage("Loading...");
+
+
+        txtAppointmentID = (TextView)findViewById(R.id.txtAppointmentID);
+        spinDate = (Spinner)findViewById(R.id.spinDate);
+        spinTime = (Spinner)findViewById(R.id.spinTime);
+        spinLocation = (Spinner)findViewById(R.id.spinnerLocation);
+        txtownerID = (TextView)findViewById(R.id.txtOwnerID);
+        txttenantID = (TextView)findViewById(R.id.txtTenantID);
+        txtlodgingID = (TextView)findViewById(R.id.txtLodgingID);
+        txtstatus = (TextView)findViewById(R.id.txtStatus);
+        txtcomment = (EditText)findViewById(R.id.txtComment);
+
+        //start:temporary data
+        List<String> dateList = new ArrayList<>();
+        dateList.add("10/10/2018");
+        dateList.add("9/10/2018");
+        String [] dateArray = dateList.toArray(new String[dateList.size()]);
+
+        ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, dateArray);
+        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinDate.setAdapter(dateAdapter);
+
+        List<String> timeList = new ArrayList<>();
+        timeList.add("06:30 PM");
+        timeList.add("03:30 PM");
+        String [] timeArray = timeList.toArray(new String[timeList.size()]);
+        ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, timeArray);
+        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinTime.setAdapter(timeAdapter);
+
+        List<String> state = new ArrayList<>();
+        try {
+            String temp = "MalaysiaState.xsd".replace("/", "");
+            DOMParserReader reader = new DOMParserReader(temp);
+            System.out.println(reader.getNodeName());
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        //end:temporary data
+
+
     }
+
+    public void Connect() throws Exception {
+        client = new MqttAndroidClient(this, broker, clientID, persistence);
+        MqttConnectOptions connOpts = new MqttConnectOptions();
+        connOpts.setCleanSession(true);
+
+        client.connect(connOpts, new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken iMqttToken) {
+                Toast.makeText(getApplication(), "onSuccess", Toast.LENGTH_LONG).show();
+                Subscribe();
+                GetID();
+            }
+
+            @Override
+            public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
+                Toast.makeText(getApplication(), "onFailure", Toast.LENGTH_LONG).show();
+            }
+        });
+        client.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable throwable) {
+                 Toast.makeText(getApplication(), "connectionLost", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+                Converter c = new Converter();
+                String[] datas = mqttMessage.toString().split("/");
+                String command = c.ToString(datas[0]);
+                String receiverClientId = c.ToString(datas[3]);
+                if(receiverClientId.equals(clientID)) {
+                    if(command.equals("004839")){
+                        setID(mqttMessage.toString());
+                    }
+                }
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+            }
+        });
+    }
+
+    public void Subscribe() {
+        try {
+            client.subscribe(topic, 1);
+            pb.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void Publish(String payload) {
+        try {
+            MqttMessage message = new MqttMessage(payload.getBytes());
+            message.setQos(qos);
+            client.publish(topic, message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pb.show();
+        try {
+            Connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            Toast.makeText(this,"onPause", Toast.LENGTH_LONG).show();
+            client.disconnect();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void GetID(){
+        String payload = c.convertToHex(new String[]{"004839", "000000000000000000000000",clientID,serverID});
+        Publish(payload);
+    }
+
+    public void setID(String message){
+        String[] data = c.convertToString(message);
+        String id = data[4];
+        System.out.println(id);
+        txtAppointmentID.setText(id);
+    }
+
+
 }
+

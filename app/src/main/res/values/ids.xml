@@ -2,4 +2,5 @@
 <resources>
     <item name="viewTime" type="id">viewTime</item>
     <item name="spinnerLocation" type="id">spinnerLocation</item>
+    <item name="spinTime" type="id">spinTime</item>
 </resources>

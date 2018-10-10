@@ -200,15 +200,7 @@ public class Listed_Private_Chat extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        try {
-            client.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public void Retrieve() {
         String command = "004835";
@@ -299,7 +291,7 @@ public class Listed_Private_Chat extends AppCompatActivity {
                 Message message1 = new PrivateChat(data[0],data[1],data[2],data[3],data[4]);
                 ((PrivateChat) message1).setDelStatus(data[5]);
 
-                String tempvalue = "http://192.168.0.153/img/User/"+data[4]+".jpg";
+                String tempvalue = "http://192.168.42.129/img/User/"+data[4]+".jpg";
 
                 //delStatus: determine who delete the chat
                 if(data[5].compareTo("NOTHING") != 0){

@@ -57,7 +57,7 @@ public class Home extends AppCompatActivity
     Converter c = new Converter();
     List<Lodging> ll = new ArrayList<>();
     ProgressDialog pb;
-    String ip = "192.168.0.153";
+    String ip = "192.168.42.129";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
