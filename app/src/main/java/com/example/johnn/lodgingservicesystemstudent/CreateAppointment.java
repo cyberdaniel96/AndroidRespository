@@ -129,7 +129,7 @@ public class CreateAppointment extends AppCompatActivity {
                 Subscribe();
                 GetID();
             }
-
+//
             @Override
             public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
                 Toast.makeText(getApplication(), "onFailure", Toast.LENGTH_LONG).show();
