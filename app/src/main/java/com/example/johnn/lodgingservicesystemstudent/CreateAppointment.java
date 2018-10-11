@@ -92,6 +92,8 @@ public class CreateAppointment extends AppCompatActivity {
         txtownerID.setText(""+intent.getStringExtra("ownerID"));
         txttenantID.setText(""+intent.getStringExtra("clientID"));
         txtlodgingID.setText(""+intent.getStringExtra("lodgingID"));
+
+        submitApp.setOnClickListener(new SubmitApp());
         //start:temporary data
         List<String> dateList = new ArrayList<>();
         dateList.add("10/10/2018");
@@ -158,6 +160,16 @@ public class CreateAppointment extends AppCompatActivity {
                 if(receiverClientId.equals(clientID)) {
                     if(command.equals("004839")){
                         setID(mqttMessage.toString());
+                    }
+                    if(command.equals("004823")){
+                        String results = c.ToString(datas[5]);
+
+                        if("Success".compareTo(results) == 0){
+                            Toast.makeText(CreateAppointment.this, "Appointment Created", Toast.LENGTH_LONG).show();
+                        }
+                        if("Fail".compareTo(results) == 0){
+                            Toast.makeText(CreateAppointment.this, "Appointment Create Failed", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             }
@@ -250,9 +262,7 @@ public class CreateAppointment extends AppCompatActivity {
         }
     }
 
-   public void tell(View view){
 
-   }
 
 }
 
