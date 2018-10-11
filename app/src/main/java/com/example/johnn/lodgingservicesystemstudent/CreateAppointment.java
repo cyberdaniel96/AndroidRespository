@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,7 +26,9 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.io.File;
 import java.nio.file.FileSystem;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import service.Converter;
 
@@ -55,6 +59,9 @@ public class CreateAppointment extends AppCompatActivity {
     TextView txtlodgingID;
     TextView txtstatus;
     EditText txtcomment;
+    Button submitApp;
+
+    Map<String, String> statemap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +77,7 @@ public class CreateAppointment extends AppCompatActivity {
         pb = new ProgressDialog(this);
         pb.setCanceledOnTouchOutside(false);
         pb.setMessage("Loading...");
-
+        statemap = new HashMap<>();
 
         txtAppointmentID = (TextView)findViewById(R.id.txtAppointmentID);
         spinDate = (Spinner)findViewById(R.id.spinDate);
@@ -81,7 +88,7 @@ public class CreateAppointment extends AppCompatActivity {
         txtlodgingID = (TextView)findViewById(R.id.txtLodgingID);
         txtstatus = (TextView)findViewById(R.id.txtStatus);
         txtcomment = (EditText)findViewById(R.id.txtComment);
-
+        submitApp = (Button)findViewById(R.id.btnCreateAppointment);
         txtownerID.setText(""+intent.getStringExtra("ownerID"));
         txttenantID.setText(""+intent.getStringExtra("clientID"));
         txtlodgingID.setText(""+intent.getStringExtra("lodgingID"));
@@ -107,6 +114,7 @@ public class CreateAppointment extends AppCompatActivity {
         String[] stateResourceArr = getResources().getStringArray(R.array.state);
         for(String tempData: stateResourceArr){
             String[] stateSplit = tempData.split("-");
+            statemap.put(stateSplit[0], stateSplit[1]);
             stateList.add(stateSplit[0]);
         }
 
@@ -212,6 +220,39 @@ public class CreateAppointment extends AppCompatActivity {
         txtAppointmentID.setText(id);
     }
 
+    private class SubmitApp implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            String appointmentID = txtAppointmentID.getText().toString();
+            String dateTime = spinDate.getSelectedItem().toString()+"AND"+spinTime.getSelectedItem().toString();
+            //String reason = "";
+            String state = spinLocation.getSelectedItem().toString();
+            String priority = "";
+            if(!statemap.isEmpty()){
+                if(statemap.containsKey(state)){
+                    priority  = statemap.get(state);
+                }
+            }else{
+                priority = "NOTHING";
+            }
+            String comment = txtcomment.getText().toString();
+            String status = txtstatus.getText().toString();
+            String lodgingID = txtlodgingID.getText().toString();
+            String tenantID = txttenantID.getText().toString();
+            String ownerID  = txtownerID.getText().toString();
+
+            String payload = c.convertToHex(new String[]{"004823", "000000000000000000000000", clientID, serverID,
+                    appointmentID, dateTime, state, priority, comment, status, lodgingID, tenantID, ownerID});
+
+            Publish(payload);
+            Toast.makeText(CreateAppointment.this, "Creating Appointment....", Toast.LENGTH_LONG).show();
+        }
+    }
+
+   public void tell(View view){
+
+   }
 
 }
 
