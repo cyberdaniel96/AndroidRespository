@@ -5,11 +5,15 @@
  */
 package domain;
 
+import java.io.Serializable;
+
+import javax.crypto.SecretKey;
+
 /**
  *
  * @author Daniel
  */
-public class Appointment {
+public class Appointment implements Serializable {
     private String appointmentID;
     private String dateTime;
     private String reason;

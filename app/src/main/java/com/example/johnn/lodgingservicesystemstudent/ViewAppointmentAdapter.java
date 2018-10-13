@@ -2,6 +2,7 @@ package com.example.johnn.lodgingservicesystemstudent;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
 
         ViewHolder(View itemView){
             super(itemView);
-
+            itemView.setOnClickListener(this);
             ownerID = (TextView)itemView.findViewById(R.id.txtOwnerID);
             status  = (TextView)itemView.findViewById(R.id.txtStatus);
             date = (TextView)itemView.findViewById(R.id.txtDate);
@@ -50,7 +51,20 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
 
         void bind(Appointment appointment){
             ownerID.setText(""+appointment.getOwnerID());
-            status.setText(""+appointment.getStatus());
+
+            if(appointment.getStatus().equals("pending")){
+                status.setText(appointment.getStatus());
+                status.setTextColor(Color.rgb(255,215,0));
+            }
+            if(appointment.getStatus().equals("accepted")){
+                status.setText(appointment.getStatus());
+                status.setTextColor(Color.rgb(124,252,0));
+            }
+            if(appointment.getStatus().equals("rejected")){
+                status.setText(appointment.getStatus());
+                status.setTextColor(Color.rgb(255,0,0));
+            }
+
             String[] dateTime = appointment.getDateTime().split("AND");
             date.setText(""+dateTime[0]);
             time.setText(""+dateTime[1]);
