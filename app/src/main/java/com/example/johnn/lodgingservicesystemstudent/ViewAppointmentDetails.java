@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,8 @@ public class ViewAppointmentDetails extends AppCompatActivity {
     TextView txtstatus;
     TextView txtReason;
     TextView viewReason;
+
+    String clientID = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +35,9 @@ public class ViewAppointmentDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
         Appointment app = (Appointment) intent.getSerializableExtra("anAppointment");
+        clientID = "1610480";
 
+        Log.e("status", app.getStatus());
         txtAppointmentID = (TextView)findViewById(R.id.txtAppointmentID);
         txtDate = (TextView)findViewById(R.id.txtDate);
         txtTime = (TextView)findViewById(R.id.txtTime);
@@ -67,13 +72,27 @@ public class ViewAppointmentDetails extends AppCompatActivity {
             txtstatus.setTextColor(Color.rgb(255,0,0));
         }
 
-        if(!app.getReason().equals("NOTHING")){
-            txtReason.setText(app.getReason());
-            txtReason.setVisibility(View.VISIBLE);
-            viewReason.setVisibility(View.VISIBLE);
+        String[] splitReason = app.getReason().split("AND");
+        String reasonTenant = splitReason[0];
+        String reasonOwner = splitReason[1];
+        String[] splitBYTenant = reasonTenant.split("BY");
+        String[] splitBYOwner = reasonOwner.split("BY");
+
+        /*
+        * 1. confirm both message are tenant and owner written
+        * 2. check is owner or written having the message
+        * 3. if having the message then show
+        * 4. no then invisible is setted*/
+
+        if(splitBYTenant[1].equals(app.getTenantID()) && splitBYOwner[1].equals(app.getOwnerID())){
+            if(app.getStatus().equals("rejected")) {
+                if (!splitBYOwner[0].equals("NOTHING")) {
+                    viewReason.setVisibility(View.VISIBLE);
+                    txtReason.setText(splitBYOwner[0]);
+                    txtReason.setVisibility(View.VISIBLE);
+                    txtReason.setTextColor(Color.RED);
+                }
+            }
         }
-
-
-
     }
 }

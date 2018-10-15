@@ -25,7 +25,6 @@ public class Appointment implements Serializable {
     private String tenantID;
     private String ownerID;
 
-
     public Appointment(String appointmentID, String dateTime, String reason, String state, String priority, String comment, String status, String lodgingID, String tenantID, String ownerID) {
         this.appointmentID = appointmentID;
         this.dateTime = dateTime;

@@ -1,14 +1,20 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -30,8 +36,11 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
     TextView status;
     TextView date;
     TextView time;
-
+    Button btn1;
     private static MyOnClick clickListener;
+
+    boolean activate = false;
+
     public ViewAppointmentAdapter(Context context, List<Appointment> list){
         this.context = context;
         this.list = list;
@@ -47,10 +56,44 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
             status  = (TextView)itemView.findViewById(R.id.txtStatus);
             date = (TextView)itemView.findViewById(R.id.txtDate);
             time = (TextView)itemView.findViewById(R.id.txtTime);
+
+            btn1 = (Button)itemView.findViewById(R.id.button1);
+
+            btn1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    alert.setTitle("Deleting Message");
+                    alert.setMessage(Html.fromHtml("<font color='#FF7F27'>Are you sure you want to delete??</font>"));
+                    alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //prefs = context.getSharedPreferences("MYPREFS", 0);
+                            String loggedInID = "16104807";
+                            try {
+                                CancelAppointment cancelAppointment = new CancelAppointment(loggedInID, context, list.get(getAdapterPosition()));
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+                    alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            dialog.dismiss();
+                        }
+                    });
+                    alert.show();
+                }
+            });
         }
 
         void bind(Appointment appointment){
-            ownerID.setText(""+appointment.getOwnerID());
+            ownerID.setText(appointment.getOwnerID());
 
             if(appointment.getStatus().equals("pending")){
                 status.setText(appointment.getStatus());
@@ -66,15 +109,21 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
             }
 
             String[] dateTime = appointment.getDateTime().split("AND");
-            date.setText(""+dateTime[0]);
-            time.setText(""+dateTime[1]);
+            date.setText(dateTime[0]);
+            time.setText(dateTime[1]);
+
+            if(activate){
+                btn1.setVisibility(View.VISIBLE);
+            }else{
+                btn1.setVisibility(View.GONE);
+            }
+
         }
+
 
         @Override
         public void onClick(View view) {
             clickListener.onItemClick(getAdapterPosition(), view);
-
-
         }
     }
 
@@ -84,6 +133,11 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
 
     public void setOnItemClickListener(MyOnClick myOnClick){
         ViewAppointmentAdapter.clickListener = myOnClick;
+    }
+
+    public void setButtonVisible(boolean activate){
+
+        this.activate = activate;
     }
 
     @Override

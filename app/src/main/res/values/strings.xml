@@ -76,4 +76,5 @@
     <string name="AppointmentID">Appointment ID:</string>
     <string name="location">Location</string>
     <string name="make_appointment">Make Appointment</string>
+    <string name="Cancel">Cancel</string>
 </resources>

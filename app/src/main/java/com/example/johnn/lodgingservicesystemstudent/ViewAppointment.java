@@ -1,10 +1,14 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -34,17 +38,58 @@ public class ViewAppointment extends AppCompatActivity {
     MemoryPersistence persistence = new MemoryPersistence();
     final Converter c = new Converter();
 
-    List<Appointment> list;
+    List<Appointment> list = new ArrayList<>();
     RecyclerView recyclerView;
     ViewAppointmentAdapter adapter;
-
+    boolean boolCacnel = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_appointment);
 
+       // SharedPreferences userDetails = getSharedPreferences("userdetails", MODE_PRIVATE);
+       // System.out.println("shared preference " + userDetails.getString("LoggedInUser",""));
         clientId = "16104807";
         receiverClientId = "serverLSSserver";
+
+        recyclerView = (RecyclerView) findViewById(R.id.viewAppointmentListRV);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        adapter = new ViewAppointmentAdapter(this, list);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.appointment_option, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.appCancel:
+                if(!boolCacnel){
+                    adapter.setButtonVisible(true);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    boolCacnel = true;
+                    break;
+                }else{
+                    adapter.setButtonVisible(false);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    boolCacnel = false;
+                    break;
+                }
+
+        }
+
+        return true;
     }
 
     public void Connect() throws Exception {
@@ -79,8 +124,6 @@ public class ViewAppointment extends AppCompatActivity {
                 String data[] = datas[0].split("/");
                 String command = c.ToString(data[0]);
                 String receiverClientId = c.ToString(data[3]);
-                System.out.println(command);
-                System.out.println(receiverClientId);
                 if (receiverClientId.equals(clientId)) {
                     if(command.equals("004831")){
                         if(c.ToString(data[4]).equals("Success")){
@@ -135,18 +178,19 @@ public class ViewAppointment extends AppCompatActivity {
 
         String[] splitDollar = message.split("\\$");
 
-        final List<Appointment> list = new ArrayList<>();
+       list = new ArrayList<>();
 
-
-        for(int count = 1; count <= splitDollar.length; count++){
+        int loop = splitDollar.length-1;
+        for (int count = 1; count <= splitDollar.length; count++) {
             String[] data = c.convertToString(splitDollar[count]);
 
-             Appointment app = new Appointment(data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8],data[9]);
-            list.add(app);
-           System.out.println();
-          if(list.size() == splitDollar.length - 1){
+            Appointment app = new Appointment(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9]);
+            if(!app.getStatus().equals("cancel")){
+                list.add(app);
+            }
+           if(loop == count){
                 break;
-          }
+           }
         }
 
         recyclerView = (RecyclerView) findViewById(R.id.viewAppointmentListRV);
@@ -155,8 +199,6 @@ public class ViewAppointment extends AppCompatActivity {
 
         adapter = new ViewAppointmentAdapter(this, list);
         recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-
         adapter.setOnItemClickListener(new ViewAppointmentAdapter.MyOnClick() {
             @Override
             public void onItemClick(int position, View v) {
@@ -165,5 +207,7 @@ public class ViewAppointment extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        adapter.notifyDataSetChanged();
     }
 }
