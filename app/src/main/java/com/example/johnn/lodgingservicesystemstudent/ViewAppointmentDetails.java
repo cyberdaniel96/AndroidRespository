@@ -1,6 +1,7 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,17 +28,23 @@ public class ViewAppointmentDetails extends AppCompatActivity {
     TextView txtReason;
     TextView viewReason;
 
+    Button btnRemake;
     String clientID = "";
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_appointment_details);
 
-        Intent intent = getIntent();
+         intent = getIntent();
         Appointment app = (Appointment) intent.getSerializableExtra("anAppointment");
-        clientID = "1610480";
 
-        Log.e("status", app.getStatus());
+        SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
+        clientID  = userDetails.getString("UserID","")+7;
+
+        btnRemake = (Button)findViewById(R.id.btnRemake);
+
+
         txtAppointmentID = (TextView)findViewById(R.id.txtAppointmentID);
         txtDate = (TextView)findViewById(R.id.txtDate);
         txtTime = (TextView)findViewById(R.id.txtTime);
@@ -94,5 +101,11 @@ public class ViewAppointmentDetails extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void remakeAppointment(View v){
+        Intent intent = new Intent(getApplicationContext(), UpdateAppointment.class);
+        intent.putExtra("anAppointment", (Appointment)this.intent.getSerializableExtra("anAppointment"));
+        startActivity(intent);
     }
 }

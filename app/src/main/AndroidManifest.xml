@@ -18,7 +18,11 @@
 
         <activity android:name=".Login">
             android:windowSoftInputMode="adjustPan"
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Home"
@@ -66,13 +70,10 @@
         <activity android:name=".Listed_Private_Chat" />
         <activity android:name=".CreateAppointment" />
         <activity android:name=".ViewAppointment">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".ViewAppointmentDetails"></activity>
+        <activity android:name=".ViewAppointmentDetails" />
+        <activity android:name=".UpdateAppointment"></activity>
     </application>
 
 </manifest>

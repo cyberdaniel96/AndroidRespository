@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_horizontal_margin"
-    tools:context="com.example.johnn.lodgingservicesystemstudent.ViewAppointmentDetails">
+    tools:context="com.example.johnn.lodgingservicesystemstudent.UpdateAppointment">
 
 
     <RelativeLayout
@@ -35,55 +35,30 @@
             android:padding="10dp"
             android:text="A1000000" />
 
-        <TextView
-            android:id="@+id/viewDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <Spinner
+            android:id="@+id/spinDate"
+            android:layout_width="164dp"
+            android:layout_height="40dp"
             android:layout_below="@id/viewAppointmentID"
             android:layout_alignParentLeft="true"
-            android:padding="10dp"
-            android:text="Date :" />
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@+id/spinTime"
+            android:padding="10dp" />
 
-        <TextView
-            android:id="@+id/txtDate"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/viewAppointmentID"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="51dp"
-            android:layout_marginTop="0dp"
-            android:padding="10dp"
-            android:text="txtDate" />
-
-        <TextView
-            android:id="@+id/viewTime"
-            android:layout_width="169dp"
-            android:layout_height="wrap_content"
+        <Spinner
+            android:id="@id/spinTime"
+            android:layout_width="162dp"
+            android:layout_height="40dp"
             android:layout_below="@id/viewAppointmentID"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="0dp"
-            android:padding="10dp"
-            android:text="Time :" />
-
-        <TextView
-            android:id="@+id/txtTime"
-            android:layout_width="118dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/viewAppointmentID"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="0dp"
-            android:padding="10dp"
-            android:text="txtTime" />
+            android:padding="10dp" />
 
 
         <TextView
             android:id="@+id/viewOwnerID"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/viewTime"
+            android:layout_below="@id/spinTime"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
             android:text="Owner ID" />
@@ -92,7 +67,7 @@
             android:id="@+id/txtOwnerID"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/viewTime"
+            android:layout_below="@id/spinTime"
             android:layout_alignParentRight="true"
             android:layout_marginTop="-1dp"
             android:padding="10dp"
@@ -156,6 +131,7 @@
             android:padding="10dp"
             android:text="pending" />
 
+
         <TextView
             android:id="@+id/viewReason"
             android:layout_width="match_parent"
@@ -163,30 +139,25 @@
             android:layout_below="@id/viewStatus"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
-            android:text="Reason Rejected :" />
+            android:text="Reason To Remake" />
 
-        <TextView
+        <EditText
             android:id="@+id/txtReason"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/viewStatus"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="0dp"
-            android:padding="10dp"
-            android:text="reason" />
-
-        <Button
-            android:id="@+id/btnRemake"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txtReason"
+            android:layout_below="@id/viewReason"
+            android:inputType="textMultiLine" />
 
+        <Button
+            android:id="@+id/btnConfirmRemake"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="86dp"
-            android:onClick="remakeAppointment"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
+            android:onClick="updateConfirmation"
             android:text="Remake Appointment" />
-
 
     </RelativeLayout>
 

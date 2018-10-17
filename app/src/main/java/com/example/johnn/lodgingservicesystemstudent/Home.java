@@ -315,6 +315,9 @@ public class Home extends AppCompatActivity
         }else if(id == R.id.nav_private_chat){
             Intent intent = new Intent(this, Listed_Private_Chat.class);
             startActivity(intent);
+        }else if(id == R.id.nav_viewAppointment){
+            Intent intent = new Intent(this, ViewAppointment.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

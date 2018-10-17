@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -68,8 +69,8 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
                     alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            //prefs = context.getSharedPreferences("MYPREFS", 0);
-                            String loggedInID = "16104807";
+                            SharedPreferences userDetails = context.getSharedPreferences("LoggedInUser", context.MODE_PRIVATE);
+                            String loggedInID  = userDetails.getString("UserID","")+7;
                             try {
                                 CancelAppointment cancelAppointment = new CancelAppointment(loggedInID, context, list.get(getAdapterPosition()));
 

@@ -19,6 +19,11 @@
                     android:icon="@drawable/ic_favorite_black_48dp"
                     android:title="@string/favouriteLodging"
                     android:checkable="false"/>
+                <item
+                    android:id="@+id/nav_viewAppointment"
+                    android:icon="@drawable/ic_favorite_black_48dp"
+                    android:title="@string/viewAppointment"
+                    android:checkable="false"/>
             </menu>
         </item>
     </group>

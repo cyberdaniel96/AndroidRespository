@@ -53,7 +53,6 @@ public class CreateAppointment extends AppCompatActivity {
     Spinner spinLocation;
     String txtDate = "";
     String txtTime = "";
-    String txtLocation = "";
     TextView txtownerID;
     TextView txttenantID;
     TextView txtlodgingID;
@@ -99,7 +98,6 @@ public class CreateAppointment extends AppCompatActivity {
         dateList.add("10/10/2018");
         dateList.add("9/10/2018");
         String [] dateArray = dateList.toArray(new String[dateList.size()]);
-
         ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, dateArray);
         dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinDate.setAdapter(dateAdapter);

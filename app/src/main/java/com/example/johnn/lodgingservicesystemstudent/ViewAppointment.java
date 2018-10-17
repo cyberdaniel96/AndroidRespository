@@ -47,12 +47,12 @@ public class ViewAppointment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_appointment);
 
-       // SharedPreferences userDetails = getSharedPreferences("userdetails", MODE_PRIVATE);
-       // System.out.println("shared preference " + userDetails.getString("LoggedInUser",""));
-        clientId = "16104807";
+        SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
+        clientId = userDetails.getString("UserID","")+7;
         receiverClientId = "serverLSSserver";
 
-        recyclerView = (RecyclerView) findViewById(R.id.viewAppointmentListRV);
+        recyclerView =
+                (RecyclerView) findViewById(R.id.viewAppointmentListRV);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -103,18 +103,18 @@ public class ViewAppointment extends AppCompatActivity {
             public void onSuccess(IMqttToken iMqttToken) {
                 Subscribe();
                 GetData();
-               // Toast.makeText(ViewAppointment.this, "onSuccess", Toast.LENGTH_LONG).show();
+
             }
 
             @Override
             public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-               // Toast.makeText(ViewAppointment.this, "onFailure", Toast.LENGTH_LONG).show();
+
             }
         });
         client.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable throwable) {
-             //   Toast.makeText(ViewAppointment.this, "connection lost", Toast.LENGTH_LONG).show();
+
             }
 
             @Override
