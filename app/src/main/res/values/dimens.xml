@@ -5,4 +5,8 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <integer name="max_width_short_month_label_dp">240</integer>
+    <integer name="max_height_mini_view_dp">180</integer>
+    <integer name="max_height_mini_view_1_row_dp">120</integer>
 </resources>

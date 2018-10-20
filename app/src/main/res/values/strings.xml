@@ -78,4 +78,6 @@
     <string name="make_appointment">Make Appointment</string>
     <string name="Cancel">Cancel</string>
     <string name="viewAppointment">View Appointment</string>
+    <string name="previous_month">Previous month</string>
+    <string name="next_month">Next month</string>
 </resources>

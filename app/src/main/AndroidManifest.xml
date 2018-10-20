@@ -18,11 +18,7 @@
 
         <activity android:name=".Login">
             android:windowSoftInputMode="adjustPan"
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Home"
@@ -69,11 +65,23 @@
             android:parentActivityName=".ViewLodgingDetails" />
         <activity android:name=".Listed_Private_Chat" />
         <activity android:name=".CreateAppointment" />
-        <activity android:name=".ViewAppointment">
-
-        </activity>
+        <activity android:name=".ViewAppointment"></activity>
         <activity android:name=".ViewAppointmentDetails" />
-        <activity android:name=".UpdateAppointment"></activity>
+        <activity android:name=".UpdateAppointment" />
+        <activity android:name=".Testing"> <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter></activity>
+
+        <receiver android:name=".MonthCalendarWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
     </application>
 
 </manifest>
