@@ -29,6 +29,7 @@ import java.util.List;
 
 import domain.Appointment;
 import service.Converter;
+import service.SessionManager;
 
 public class UpdateAppointment extends AppCompatActivity {
 
@@ -215,11 +216,27 @@ public class UpdateAppointment extends AppCompatActivity {
 
             String newReason = reason+"BY"+app.getTenantID() +"AND"+ splitAnd[1];
             app.setReason(newReason);
-            Log.e("output",app.toString());
             String payload = c.convertToHex(new String[]{"004827","000000000000000000000000",clientID,receiverClientId,
                     app.getAppointmentID(),app.getDateTime(),app.getReason(),app.getState(),
             app.getPriority(),app.getComment(),app.getStatus(),app.getLodgingID(),app.getTenantID(),app.getOwnerID()});
             Publish(payload);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Message");
+            builder.setMessage("Your request has been send to owner")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            SharedPreferences prefs = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
+                            Intent intent = new Intent(getApplicationContext(), Home.class);
+                            intent.putExtra("UserID", prefs.getString("UserID", "User ID Not Found"));
+                            intent.putExtra("Email", prefs.getString("Email", "Email not found"));
+                            startActivity(intent);
+                            finish();
+
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
 
     }

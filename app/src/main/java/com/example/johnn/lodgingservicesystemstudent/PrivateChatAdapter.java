@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
 
     private class ReceivedMessageHolder extends RecyclerView.ViewHolder{
          TextView name, content, time;
-         ImageView img;
+         ImageView picture;
 
          ReceivedMessageHolder(View itemView){
              super(itemView);
@@ -45,6 +46,7 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
              name = (TextView)itemView.findViewById(R.id.text_message_name);
              content = (TextView)itemView.findViewById(R.id.text_message_body);
              time = (TextView)itemView.findViewById(R.id.text_message_time);
+             picture = (ImageView)itemView.findViewById(R.id.image_message_profile);
          }
 
          void bind(Message message){
@@ -53,6 +55,13 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
              name.setText(((PrivateChat) msg).getSenderID());
              content.setText(msg.getContent());
              time.setText(msg.getSentTime());
+             String imageAddress = "http://"+Home.ip+"/img/User/"+name.getText().toString()+".jpg";
+             Log.e("Image", imageAddress);
+             Glide.with(itemView.getContext())
+                     .load(imageAddress)
+                     .transform(new CircleTransform(itemView.getContext()))
+                     .override(50,50)
+                     .into(picture);
          }
     }
 

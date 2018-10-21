@@ -1,5 +1,6 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,7 @@ public class ViewAppointment extends AppCompatActivity {
     RecyclerView recyclerView;
     ViewAppointmentAdapter adapter;
     boolean boolCacnel = false;
+    ProgressDialog pb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,10 @@ public class ViewAppointment extends AppCompatActivity {
         SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
         clientId = userDetails.getString("UserID","")+7;
         receiverClientId = "serverLSSserver";
+
+        pb = new ProgressDialog(this);
+        pb.setCanceledOnTouchOutside(false);
+        pb.setMessage("Loading...");
 
         recyclerView =
                 (RecyclerView) findViewById(R.id.viewAppointmentListRV);
@@ -103,7 +109,6 @@ public class ViewAppointment extends AppCompatActivity {
             public void onSuccess(IMqttToken iMqttToken) {
                 Subscribe();
                 GetData();
-
             }
 
             @Override

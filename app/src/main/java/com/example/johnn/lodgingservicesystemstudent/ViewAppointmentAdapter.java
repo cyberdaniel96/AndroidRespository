@@ -37,6 +37,7 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
     TextView status;
     TextView date;
     TextView time;
+    ImageView img;
     Button btn1;
     private static MyOnClick clickListener;
 
@@ -57,7 +58,7 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
             status  = (TextView)itemView.findViewById(R.id.txtStatus);
             date = (TextView)itemView.findViewById(R.id.txtDate);
             time = (TextView)itemView.findViewById(R.id.txtTime);
-
+            img = (ImageView)itemView.findViewById(R.id.image_appointment_user);
             btn1 = (Button)itemView.findViewById(R.id.button1);
 
             btn1.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +119,12 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
             }else{
                 btn1.setVisibility(View.GONE);
             }
-
+            String imageAddress = "http://"+Home.ip+"/img/User/"+ownerID.getText().toString()+".jpg";
+            Glide.with(itemView.getContext())
+                    .load(imageAddress)
+                    .transform(new CircleTransform(itemView.getContext()))
+                    .override(50,50)
+                    .into(img);
         }
 
 

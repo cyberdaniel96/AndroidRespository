@@ -2,6 +2,7 @@ package com.example.johnn.lodgingservicesystemstudent;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -57,7 +58,7 @@ public class Home extends AppCompatActivity
     Converter c = new Converter();
     List<Lodging> ll = new ArrayList<>();
     ProgressDialog pb;
-    String ip = "192.168.42.129";
+    public static String ip = "192.168.0.171";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class Home extends AppCompatActivity
 
         userId.setText(getIntent().getStringExtra("UserID"));
         email.setText(getIntent().getStringExtra("Email"));
+
         final SearchView s = (SearchView) findViewById(R.id.keywordSV);
         clientId = getIntent().getStringExtra("UserID");
         s.setQueryHint("Address");

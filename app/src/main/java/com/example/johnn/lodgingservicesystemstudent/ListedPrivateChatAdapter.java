@@ -43,14 +43,14 @@ public class ListedPrivateChatAdapter extends RecyclerView.Adapter {
 
         void bind(Message message){
             Message msg = (PrivateChat)message;
-
-
+            name.setText(((PrivateChat) msg).getReceiverID());
+            String imageAddress = "http://"+Home.ip+"/img/User/"+name.getText().toString()+".jpg";
             Glide.with(itemView.getContext())
-                    .load(msg.getImage())
+                    .load(imageAddress)
                     .transform(new CircleTransform(itemView.getContext()))
                     .override(50,50)
                     .into(img);
-            name.setText(((PrivateChat) msg).getReceiverID());
+
         }
 
         @Override

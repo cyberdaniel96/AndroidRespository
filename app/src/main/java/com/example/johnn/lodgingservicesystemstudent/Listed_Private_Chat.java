@@ -49,7 +49,6 @@ public class Listed_Private_Chat extends AppCompatActivity {
     List<Message> list = new ArrayList<>();
     List<Message> tempList = new ArrayList<>();
 
-
     TextView nametxt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +98,8 @@ public class Listed_Private_Chat extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         PrivateChat chat = (PrivateChat) list.get(position);
                         Retrieve(chat.getReceiverID());
-
-
+                        finish();
+                        startActivity(getIntent());
                     }
                 });
                 alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -330,6 +329,7 @@ public class Listed_Private_Chat extends AppCompatActivity {
 
                 adapter.notifyDataSetChanged();
             }
+            pb.dismiss();
         }
     }
 }

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -132,7 +133,6 @@ public class PrivateChatList extends AppCompatActivity {
 
             @Override
             public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-                System.out.println("Message Arrived");
                 Converter c = new Converter();
                 String datas[] = mqttMessage.toString().split("\\$");
                 String[] head = datas[0].split("/");
@@ -241,7 +241,7 @@ public class PrivateChatList extends AppCompatActivity {
             Toast.makeText(this, "YOU CANNOT SEND TO YOURSELF..!",Toast.LENGTH_LONG).show();
             return;
         }
-
+        messageBody.setText("");
         Publish(payload);
     }
 

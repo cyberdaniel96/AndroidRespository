@@ -1,8 +1,11 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -257,6 +260,23 @@ public class CreateAppointment extends AppCompatActivity {
 
             Publish(payload);
             Toast.makeText(CreateAppointment.this, "Creating Appointment....", Toast.LENGTH_LONG).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(CreateAppointment.this);
+            builder.setTitle("Message");
+            builder.setMessage("You have made the appointment with "+txtownerID.getText().toString())
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            SharedPreferences prefs = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
+                            Intent intent = new Intent(getApplicationContext(), Home.class);
+                            intent.putExtra("UserID", prefs.getString("UserID", "User ID Not Found"));
+                            intent.putExtra("Email", prefs.getString("Email", "Email not found"));
+                            startActivity(intent);
+                            finish();
+
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
     }
 
