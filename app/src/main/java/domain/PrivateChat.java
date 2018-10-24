@@ -50,7 +50,8 @@ public class PrivateChat extends Message{
     @Override
     public String toString() {
         String result = "Sender ID : " + this.senderID + "\n" +
-                "Receiver ID : " + this.receiverID + "\n\n";
+                "Receiver ID : " + this.receiverID + "\n" +
+                "Status : " + this.delStatus + "\n\n";
         return super.toString() + result;
     }
 

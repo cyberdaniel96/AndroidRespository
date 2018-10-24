@@ -38,10 +38,8 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
     TextView date;
     TextView time;
     ImageView img;
-    Button btn1;
     private static MyOnClick clickListener;
-
-    boolean activate = false;
+    private static MyOnLongClick longClickListener;
 
     public ViewAppointmentAdapter(Context context, List<Appointment> list){
         this.context = context;
@@ -49,49 +47,18 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
 
     }
 
-    private class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
 
         ViewHolder(View itemView){
             super(itemView);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
             ownerID = (TextView)itemView.findViewById(R.id.txtOwnerID);
             status  = (TextView)itemView.findViewById(R.id.txtStatus);
             date = (TextView)itemView.findViewById(R.id.txtDate);
             time = (TextView)itemView.findViewById(R.id.txtTime);
             img = (ImageView)itemView.findViewById(R.id.image_appointment_user);
-            btn1 = (Button)itemView.findViewById(R.id.button1);
 
-            btn1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                    alert.setTitle("Deleting Message");
-                    alert.setMessage(Html.fromHtml("<font color='#FF7F27'>Are you sure you want to delete??</font>"));
-                    alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            SharedPreferences userDetails = context.getSharedPreferences("LoggedInUser", context.MODE_PRIVATE);
-                            String loggedInID  = userDetails.getString("UserID","")+7;
-                            try {
-                                CancelAppointment cancelAppointment = new CancelAppointment(loggedInID, context, list.get(getAdapterPosition()));
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    });
-                    alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            dialog.dismiss();
-                        }
-                    });
-                    alert.show();
-                }
-            });
         }
 
         void bind(Appointment appointment){
@@ -114,11 +81,6 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
             date.setText(dateTime[0]);
             time.setText(dateTime[1]);
 
-            if(activate){
-                btn1.setVisibility(View.VISIBLE);
-            }else{
-                btn1.setVisibility(View.GONE);
-            }
             String imageAddress = "http://"+Home.ip+"/img/User/"+ownerID.getText().toString()+".jpg";
             Glide.with(itemView.getContext())
                     .load(imageAddress)
@@ -132,19 +94,29 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
         public void onClick(View view) {
             clickListener.onItemClick(getAdapterPosition(), view);
         }
+
+
+        @Override
+        public boolean onLongClick(View v) {
+            longClickListener.onItemLongClick(getAdapterPosition(), v);
+            return true;
+        }
     }
 
     public interface MyOnClick{
         void onItemClick(int position, View v);
     }
 
+    public interface MyOnLongClick{
+        boolean onItemLongClick(int position, View v);
+    }
+
     public void setOnItemClickListener(MyOnClick myOnClick){
         ViewAppointmentAdapter.clickListener = myOnClick;
     }
 
-    public void setButtonVisible(boolean activate){
-
-        this.activate = activate;
+    public void setOnLongClickListener(MyOnLongClick myOnLongClick){
+        ViewAppointmentAdapter.longClickListener = myOnLongClick;
     }
 
     @Override

@@ -1,17 +1,19 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
+
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -21,6 +23,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,60 +45,66 @@ public class ViewAppointment extends AppCompatActivity {
     List<Appointment> list = new ArrayList<>();
     RecyclerView recyclerView;
     ViewAppointmentAdapter adapter;
-    boolean boolCacnel = false;
     ProgressDialog pb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_appointment);
-
+        setTitle("View Appointment List");
         SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
         clientId = userDetails.getString("UserID","")+7;
         receiverClientId = "serverLSSserver";
-
         pb = new ProgressDialog(this);
         pb.setCanceledOnTouchOutside(false);
         pb.setMessage("Loading...");
 
-        recyclerView =
-                (RecyclerView) findViewById(R.id.viewAppointmentListRV);
+        recyclerView = (RecyclerView) findViewById(R.id.viewAppointmentListRV);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-
         adapter = new ViewAppointmentAdapter(this, list);
         recyclerView.setAdapter(adapter);
+
+
+        adapter.setOnItemClickListener(new ViewAppointmentAdapter.MyOnClick() {
+            @Override
+            public void onItemClick(int position, View v) {
+                Intent intent = new Intent(ViewAppointment.this, ViewAppointmentDetails.class);
+                intent.putExtra("anAppointment", list.get(position));
+                startActivity(intent);
+            }
+        });
+
+        adapter.setOnLongClickListener(new ViewAppointmentAdapter.MyOnLongClick() {
+            @Override
+            public boolean onItemLongClick(int position, View v) {
+                final Appointment app = list.get(position);
+                AlertDialog.Builder alert = new AlertDialog.Builder(ViewAppointment.this);
+                alert.setTitle("Cancelling Appointment");
+                alert.setMessage(Html.fromHtml("Are you sure you want to cancel appointment with "+app.getOwnerID()));
+                alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            CancelAppointment cancelAppointment = new CancelAppointment(clientId, ViewAppointment.this, app);
+                            finish();
+                            startActivity(getIntent());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+                return true;
+            }
+        });
         adapter.notifyDataSetChanged();
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.appointment_option, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.appCancel:
-                if(!boolCacnel){
-                    adapter.setButtonVisible(true);
-                    recyclerView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-                    boolCacnel = true;
-                    break;
-                }else{
-                    adapter.setButtonVisible(false);
-                    recyclerView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-                    boolCacnel = false;
-                    break;
-                }
-
-        }
-
-        return true;
     }
 
     public void Connect() throws Exception {
@@ -108,7 +117,7 @@ public class ViewAppointment extends AppCompatActivity {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
                 Subscribe();
-                GetData();
+                Retrieve();
             }
 
             @Override
@@ -124,16 +133,17 @@ public class ViewAppointment extends AppCompatActivity {
 
             @Override
             public void messageArrived(String s, MqttMessage mqttMessage) {
-
+                System.out.println("Message Arrived");
+                Converter c = new Converter();
                 String[] datas = mqttMessage.toString().split("\\$");
-                String data[] = datas[0].split("/");
-                String command = c.ToString(data[0]);
-                String receiverClientId = c.ToString(data[3]);
-                if (receiverClientId.equals(clientId)) {
+                String[] head = c.convertToString(datas[0]);
+                String command = head[0];
+                String reserve = head[1];
+                String senderID = head[2];
+                String receiverID = head[3];
+                if(receiverID.equals(clientId)){
                     if(command.equals("004831")){
-                        if(c.ToString(data[4]).equals("Success")){
-                            SetData(mqttMessage.toString());
-                        }
+                        SetData(mqttMessage.toString());
                     }
                 }
 
@@ -174,45 +184,35 @@ public class ViewAppointment extends AppCompatActivity {
         }
     }
 
-    private void GetData(){
-        String payload = c.convertToHex(new String[]{"004831", "000000000000000000000000", clientId, receiverClientId,clientId.substring(0,clientId.length()-1)});
+    public void Retrieve(){
+        String payload = c.convertToHex(new String[]{"004831", "000000000000000000000000", clientId, "serverLSSserver",clientId.substring(0, clientId.length()-1)});
         Publish(payload);
     }
 
-    private void SetData(String message){
+    public void SetData(String message){
+        list.clear();
+        Converter c = new Converter();
+        String[] datas = message.split("\\$");
+        String[] head = c.convertToString(datas[0]);
+        int totalList = Integer.parseInt(head[4]);
 
-        String[] splitDollar = message.split("\\$");
-
-       list = new ArrayList<>();
-
-        int loop = splitDollar.length-1;
-        for (int count = 1; count <= splitDollar.length; count++) {
-            String[] data = c.convertToString(splitDollar[count]);
-
-            Appointment app = new Appointment(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9]);
+        for(int index = 1; index <= totalList; index++){
+            String[] data = c.convertToString(datas[index]);
+            Appointment app = new Appointment(data[0], data[1], data[2], data[3],data[4],  data[5], data[6], data[7], data[8],data[9]);
             if(!app.getStatus().equals("cancel")){
                 list.add(app);
             }
-           if(loop == count){
-                break;
-           }
         }
-
-        recyclerView = (RecyclerView) findViewById(R.id.viewAppointmentListRV);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        adapter = new ViewAppointmentAdapter(this, list);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new ViewAppointmentAdapter.MyOnClick() {
-            @Override
-            public void onItemClick(int position, View v) {
-                Intent intent = new Intent(ViewAppointment.this, ViewAppointmentDetails.class);
-                intent.putExtra("anAppointment", list.get(position));
-                startActivity(intent);
-            }
-        });
+        TextView view = (TextView) findViewById(R.id.txtNoRecord);
+        if (list.size() > 0) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setVisibility(View.VISIBLE);
+        }
 
         adapter.notifyDataSetChanged();
     }
+
+
+
 }
