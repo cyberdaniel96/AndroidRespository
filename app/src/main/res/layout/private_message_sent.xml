@@ -11,11 +11,12 @@
     <TextView
         android:id="@+id/text_message_body"
         android:text="hello, hello!"
-        android:background="@layout/rouded_orange"
+        android:background="@layout/rouded_blue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="240dp"
         android:padding="8dp"
+        android:textSize="14dp"
         android:textColor="#ffffff"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"

@@ -21,7 +21,7 @@
                     android:checkable="false"/>
                 <item
                     android:id="@+id/nav_viewAppointment"
-                    android:icon="@drawable/ic_favorite_black_48dp"
+                    android:icon="@drawable/ic_appointment_black_48dp"
                     android:title="@string/viewAppointment"
                     android:checkable="false"/>
             </menu>
@@ -30,7 +30,7 @@
     <group android:id="@+id/bottom">
         <item
             android:id="@+id/nav_private_chat"
-            android:icon="@drawable/ic_info_black_48dp"
+            android:icon="@drawable/ic_chat_black_18dp"
             android:title="@string/private_chat" />
         <item
             android:id="@+id/nav_info"

@@ -62,7 +62,7 @@ public class PrivateChatList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_chat_list);
-
+        setTitle(getIntent().getStringExtra("lodgingOwner").replace("Owner ID: ",""));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SharedPreferences prefs = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
         clientId = prefs.getString("UserID", "UserID Not Found!") + 7;
@@ -187,7 +187,9 @@ public class PrivateChatList extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        System.out.println(item.getItemId());
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -302,8 +304,15 @@ public class PrivateChatList extends AppCompatActivity {
 
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        try {
+            client.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

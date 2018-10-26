@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -58,8 +59,7 @@ public class UpdateAppointment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_appointment);
 
-
-
+        setTitle("Update Appointment Details");
         SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
         clientID = userDetails.getString("UserID","");
         receiverClientId = "serverLSSserver";
@@ -240,5 +240,6 @@ public class UpdateAppointment extends AppCompatActivity {
         }
 
     }
+
 }
 

@@ -9,7 +9,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -65,7 +65,8 @@
             android:label="@string/feedback" />
         <activity
             android:name=".PrivateChatList"
-            android:parentActivityName=".ViewLodgingDetails" />
+            android:parentActivityName=".ViewLodgingDetails"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Listed_Private_Chat" />
         <activity android:name=".CreateAppointment" />
         <activity android:name=".ViewAppointment"></activity>

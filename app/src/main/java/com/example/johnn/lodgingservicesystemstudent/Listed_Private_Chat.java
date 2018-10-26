@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +59,7 @@ public class Listed_Private_Chat extends AppCompatActivity {
         pb = new ProgressDialog(this);
         pb.setCanceledOnTouchOutside(false);
         pb.setMessage("Loading...");
+        setContentView(R.layout.activity_listed__private__chat);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SharedPreferences prefs = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
         clientId = prefs.getString("UserID", "UserID Not Found!") + 7;
@@ -81,7 +83,6 @@ public class Listed_Private_Chat extends AppCompatActivity {
                 Intent intent = new Intent(Listed_Private_Chat.this, PrivateChatList.class);
                 Message message2 = (PrivateChat)list.get(position);
                 intent.putExtra("lodgingOwner",((PrivateChat) message2).getReceiverID());
-                Toast.makeText(getApplication(), ((PrivateChat) message2).getReceiverID(), Toast.LENGTH_LONG).show();
                 startActivity(intent);
             }
         });
@@ -268,4 +269,23 @@ public class Listed_Private_Chat extends AppCompatActivity {
         finish();
         startActivity(getIntent());
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        try {
+            client.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,10 +36,10 @@ public class ViewAppointmentDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_appointment_details);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
          intent = getIntent();
         Appointment app = (Appointment) intent.getSerializableExtra("anAppointment");
-
+        setTitle("View Appointment Details");
         SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
         clientID  = userDetails.getString("UserID","")+7;
 
@@ -107,5 +108,24 @@ public class ViewAppointmentDetails extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), UpdateAppointment.class);
         intent.putExtra("anAppointment", (Appointment)this.intent.getSerializableExtra("anAppointment"));
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        try {
+            Intent returnIntent = new Intent();
+            setResult(RESULT_OK, returnIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

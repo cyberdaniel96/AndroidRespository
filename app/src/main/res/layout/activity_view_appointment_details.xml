@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/view_appointment_details"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,27 +12,28 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="361dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="39dp"
-        android:layout_marginEnd="24dp">
+        android:layout_marginEnd="7dp">
 
         <TextView
             android:id="@+id/viewAppointmentID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:padding="10dp"
-            android:text="Appointment ID" />
+            android:padding="14dp"
+            android:text="Appointment ID"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtAppointmentID"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:padding="10dp"
+            android:padding="14dp"
             android:text="A1000000" />
 
         <TextView
@@ -41,8 +42,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/viewAppointmentID"
             android:layout_alignParentLeft="true"
-            android:padding="10dp"
-            android:text="Date :" />
+            android:padding="14dp"
+            android:text="Date :"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtDate"
@@ -52,7 +54,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="51dp"
             android:layout_marginTop="0dp"
-            android:padding="10dp"
+            android:padding="14dp"
             android:text="txtDate" />
 
         <TextView
@@ -63,8 +65,9 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="0dp"
             android:layout_marginRight="0dp"
-            android:padding="10dp"
-            android:text="Time :" />
+            android:padding="14dp"
+            android:text="Time :"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtTime"
@@ -75,7 +78,7 @@
             android:layout_marginLeft="0dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="0dp"
-            android:padding="10dp"
+            android:padding="14dp"
             android:text="txtTime" />
 
 
@@ -85,8 +88,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/viewTime"
             android:layout_alignParentLeft="true"
-            android:padding="10dp"
-            android:text="Owner ID" />
+            android:padding="14dp"
+            android:text="Owner ID"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtOwnerID"
@@ -95,7 +99,7 @@
             android:layout_below="@id/viewTime"
             android:layout_alignParentRight="true"
             android:layout_marginTop="-1dp"
-            android:padding="10dp"
+            android:padding="14dp"
             android:text="owner0000" />
 
 
@@ -105,8 +109,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/viewOwnerID"
             android:layout_alignParentLeft="true"
-            android:padding="10dp"
-            android:text="Tenant ID" />
+            android:padding="14dp"
+            android:text="Tenant ID"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtTenantID"
@@ -115,7 +120,7 @@
             android:layout_below="@id/viewOwnerID"
             android:layout_alignParentRight="true"
             android:layout_marginTop="0dp"
-            android:padding="10dp"
+            android:padding="14dp"
             android:text="tenant00000" />
 
         <TextView
@@ -125,7 +130,8 @@
             android:layout_below="@id/viewTenantID"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
-            android:text="Lodging ID" />
+            android:text="Lodging ID"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtLodgingID"
@@ -134,7 +140,7 @@
             android:layout_below="@id/viewTenantID"
             android:layout_alignParentRight="true"
             android:layout_marginTop="0dp"
-            android:padding="10dp"
+            android:padding="14dp"
             android:text="lodging00000" />
 
         <TextView
@@ -144,7 +150,8 @@
             android:layout_below="@id/viewLodgingID"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
-            android:text="Status" />
+            android:text="Status"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtStatus"
@@ -163,7 +170,8 @@
             android:layout_below="@id/viewStatus"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
-            android:text="Reason Rejected :" />
+            android:text="Reason Rejected :"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtReason"
@@ -175,19 +183,18 @@
             android:padding="10dp"
             android:text="reason" />
 
-        <Button
-            android:id="@+id/btnRemake"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txtReason"
-
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="86dp"
-            android:onClick="remakeAppointment"
-            android:text="Remake Appointment" />
-
-
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnRemake"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
+        android:onClick="remakeAppointment"
+        android:gravity="center|bottom"
+        android:text="Remake Appointment" />
 
 </RelativeLayout>

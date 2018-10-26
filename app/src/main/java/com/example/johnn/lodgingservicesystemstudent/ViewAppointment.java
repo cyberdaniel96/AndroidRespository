@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,7 +23,6 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +56,7 @@ public class ViewAppointment extends AppCompatActivity {
         pb = new ProgressDialog(this);
         pb.setCanceledOnTouchOutside(false);
         pb.setMessage("Loading...");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.viewAppointmentListRV);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -85,7 +85,7 @@ public class ViewAppointment extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            CancelAppointment cancelAppointment = new CancelAppointment(clientId, ViewAppointment.this, app);
+                            cancel(app);
                             finish();
                             startActivity(getIntent());
                         } catch (Exception e) {
@@ -214,5 +214,34 @@ public class ViewAppointment extends AppCompatActivity {
     }
 
 
+    public void cancel(Appointment app){
+        String command = "004829";
+        String reserve = "000000000000000000000000";
+        String senderClientId = clientId;
+        String receiverClientId = "serverLSSserver";
+
+        String appID = app.getAppointmentID();
+
+        String payload =  c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, appID});
+        Publish(payload);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        try {
+            client.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

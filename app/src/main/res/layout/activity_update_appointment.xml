@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,7 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:padding="10dp"
-            android:text="Appointment ID" />
+            android:text="Appointment ID"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtAppointmentID"
@@ -61,7 +61,8 @@
             android:layout_below="@id/spinTime"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
-            android:text="Owner ID" />
+            android:text="Owner ID"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtOwnerID"
@@ -81,7 +82,8 @@
             android:layout_below="@id/viewOwnerID"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
-            android:text="Tenant ID" />
+            android:text="Tenant ID"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtTenantID"
@@ -119,7 +121,8 @@
             android:layout_below="@id/viewLodgingID"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
-            android:text="Status" />
+            android:text="Status"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtStatus"
@@ -139,7 +142,8 @@
             android:layout_below="@id/viewStatus"
             android:layout_alignParentLeft="true"
             android:padding="10dp"
-            android:text="Reason To Remake" />
+            android:text="Reason To Remake"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/txtReason"
@@ -148,17 +152,17 @@
             android:layout_below="@id/viewReason"
             android:inputType="textMultiLine" />
 
-        <Button
-            android:id="@+id/btnConfirmRemake"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="5dp"
-            android:onClick="updateConfirmation"
-            android:text="Remake Appointment" />
-
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/btnConfirmRemake"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
+        android:onClick="updateConfirmation"
+        android:gravity="center|bottom"
+        android:text="Remake Appointment" />
 </RelativeLayout>
