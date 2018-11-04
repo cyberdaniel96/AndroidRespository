@@ -50,7 +50,6 @@ public class ListedPrivateChatAdapter extends RecyclerView.Adapter {
                     .transform(new CircleTransform(itemView.getContext()))
                     .override(50,50)
                     .into(img);
-
         }
 
         @Override

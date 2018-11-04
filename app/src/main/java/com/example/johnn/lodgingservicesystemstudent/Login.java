@@ -35,7 +35,7 @@ public class Login extends AppCompatActivity {
     MqttAndroidClient client;
     String topic = "MY/TARUC/LSS/000000001/PUB";
     int qos = 1;
-    String broker = "tcp://test.mosquitto.org:1883";
+    String broker = Home.broker;
     String clientId = MqttClient.generateClientId();
     MemoryPersistence persistence = new MemoryPersistence();
     ProgressDialog pb;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.johnn.lodgingservicesystemstudent">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -8,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
@@ -20,6 +22,7 @@
             android:windowSoftInputMode="adjustPan"
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -66,22 +69,42 @@
         <activity
             android:name=".PrivateChatList"
             android:parentActivityName=".ViewLodgingDetails"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".Listed_Private_Chat" />
         <activity android:name=".CreateAppointment" />
-        <activity android:name=".ViewAppointment"></activity>
+        <activity android:name=".ViewAppointment" />
         <activity android:name=".ViewAppointmentDetails" />
         <activity android:name=".UpdateAppointment" />
-        <activity android:name=".Testing"> </activity>
+        <activity android:name=".Testing"></activity>
 
         <receiver android:name=".MonthCalendarWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
+
+        <service
+            android:name=".Services"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name=".Receiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".CodeGenerate">
+
+        </activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -35,7 +36,7 @@ public class ViewAppointment extends AppCompatActivity {
     MqttAndroidClient client;
     String topic = "MY/TARUC/LSS/000000001/PUB";
     int qos = 1;
-    String broker = "tcp://test.mosquitto.org:1883";
+    String broker = Home.broker;
     String clientId = "";
     String receiverClientId = "";
     MemoryPersistence persistence = new MemoryPersistence();
@@ -85,9 +86,10 @@ public class ViewAppointment extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            cancel(app);
-                            finish();
-                            startActivity(getIntent());
+
+                           cancel(app);
+                           // finish();
+                           // startActivity(getIntent());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -223,7 +225,30 @@ public class ViewAppointment extends AppCompatActivity {
         String appID = app.getAppointmentID();
 
         String payload =  c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, appID});
-        Publish(payload);
+
+        cancelNotify(app.getOwnerID());
+
+       // Publish(payload);
+    }
+
+    public void cancelNotify(String ownerID){
+        String serverData = c.convertToHex(new String[]{
+                "004841",
+                "000000000000000000000000",
+                clientId,
+                receiverClientId,
+                "",
+        });
+
+        String notificationData = c.convertToHex(new String[]{"Cancel Appointment",
+                clientId.substring(0, clientId.length() - 1) +" cancelled the appointment",
+                "APPOINTMENT CANCEL",
+                ownerID});
+
+        String resourcesData =  c.ToHex("Appointment") + "@" + c.ToHex("Resouces");
+
+        String servicePayload = serverData + "$" + notificationData + "$" + resourcesData;
+        Services.publish(servicePayload);
     }
 
     @Override

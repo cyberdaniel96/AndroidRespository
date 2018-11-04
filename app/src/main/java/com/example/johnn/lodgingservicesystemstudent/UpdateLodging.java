@@ -53,7 +53,7 @@ public class UpdateLodging extends AppCompatActivity {
     MqttAndroidClient client;
     String topic = "MY/TARUC/LSS/000000001/PUB";
     int qos = 1;
-    String broker = "tcp://test.mosquitto.org:1883";
+    String broker = Home.broker;
     String clientId = "";
     MemoryPersistence persistence = new MemoryPersistence();
     final Converter c = new Converter();
