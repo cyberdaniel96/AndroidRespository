@@ -75,7 +75,7 @@
         <activity android:name=".ViewAppointment" />
         <activity android:name=".ViewAppointmentDetails" />
         <activity android:name=".UpdateAppointment" />
-        <activity android:name=".Testing"></activity>
+        <activity android:name=".Testing" android:launchMode="singleTop"></activity>
 
         <receiver android:name=".MonthCalendarWidget">
             <intent-filter>

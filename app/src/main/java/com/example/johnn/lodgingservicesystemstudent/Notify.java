@@ -1,84 +1,108 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Stack;
 
 public class Notify {
     public static final String CHANNEL_0_ID = "Channel0";
     public static final String CHANNEL_1_ID = "Channel1";
-    //public static final String CHANNEL_2_ID = "Channel2";
 
-    private NotificationManagerCompat notificationManagerCompat;
-    private Context context;
+    private NotificationManagerCompat notificationManagerCompat = null;
+    private Notification.Builder notificationBuilder = null;
+    private Context context = null;
+    private Notification notification = null;
 
     private int channel;
-    private int channel_ID;
+    private int notification_ID;
+
     private int drawable;
     private String category;
     private String title;
     private String message;
-
+    private Intent intent;
 
     public Notify(Context context) {
-        notificationManagerCompat = NotificationManagerCompat.from(context);
-        this.context = context;
 
+        this.context = context;
         this.channel = 0;
-        this.channel_ID = 0; //do not duplicate assign the channel_id
+        this.notification_ID = 0; //do not duplicate assign the channel_id
         this.drawable = R.drawable.ic_android_default_notification_icon_24dp;
         this.category = NotificationCompat.CATEGORY_MESSAGE;
         this.title = "DEMO NOTIFICATION";
-        this.message = "Palce you content here.";
+        this.message = "Place you content here.";
+        this.intent = null;
 
+        notificationManagerCompat = NotificationManagerCompat.from(this.context);
+        notificationBuilder = new Notification.Builder(context, getChannel(channel));
     }
 
-    public Notify BuildNotification() {
-        Notification notification = new Notification.Builder(context, getChannel(channel))
-                .setSmallIcon(drawable)
-                .setPriority(getPriority(channel))
-                .setCategory(category)
-                .setContentTitle(title)
-                .setContentText(message)
-                .build();
-        notificationManagerCompat.notify(channel_ID, notification);
-        return this;
-    }
-
+    //which channel
     public Notify setChannel(int channel){
         this.channel = channel;
+        notificationBuilder.setChannelId(getChannel(channel));
+        notificationBuilder.setPriority(getPriority(channel));
         return this;
     }
 
-    public Notify setChannelID(int channel_ID){
-        this.channel_ID = channel_ID;
+    //assign channel id
+    public Notify setNotificationID(int notification_ID){
+        this.notification_ID = notification_ID;
         return this;
     }
 
     public Notify setDrawable(int drawable){
         this.drawable = drawable;
+        notificationBuilder.setSmallIcon(this.drawable);
         return this;
     }
 
     public Notify setCategory(String category){
         this.category = category;
+        notificationBuilder.setCategory(this.category);
         return this;
     }
 
+
     public Notify setTitle(String title){
         this.title = title;
+        notificationBuilder.setContentTitle(this.title);
         return this;
     }
 
     public Notify setMessage(String message){
         this.message = message;
+        notificationBuilder.setContentText(this.message);
         return this;
+    }
+
+    public Notify setIntent(Intent intent){
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationBuilder.setContentIntent(pendingIntent);
+        this.intent = intent;
+        return this;
+    }
+
+    public Notify setAction(String action, String title){
+        Intent actionIntent = new Intent(context, Receiver.class);
+        actionIntent.setAction(action);
+        PendingIntent actionPendingIntent = PendingIntent.getBroadcast(context, 0, actionIntent, 0);
+        notificationBuilder.addAction(R.mipmap.ic_launcher_round, title, actionPendingIntent);
+        return this;
+    }
+
+    public void buildNotification(){
+        notification = notificationBuilder.build();
+
+        if(intent != null){
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        }
+
+        notificationManagerCompat.notify(this.notification_ID, notification);
     }
 
     private int getPriority(int channel) {
