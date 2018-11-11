@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
@@ -37,13 +38,17 @@ public class Notify {
         this.intent = null;
 
         notificationManagerCompat = NotificationManagerCompat.from(this.context);
-        notificationBuilder = new Notification.Builder(context, getChannel(channel));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationBuilder = new Notification.Builder(context, getChannel(channel));
+        }
     }
 
     //which channel
     public Notify setChannel(int channel){
         this.channel = channel;
-        notificationBuilder.setChannelId(getChannel(channel));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationBuilder.setChannelId(getChannel(channel));
+        }
         notificationBuilder.setPriority(getPriority(channel));
         return this;
     }
@@ -62,7 +67,9 @@ public class Notify {
 
     public Notify setCategory(String category){
         this.category = category;
-        notificationBuilder.setCategory(this.category);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            notificationBuilder.setCategory(this.category);
+        }
         return this;
     }
 

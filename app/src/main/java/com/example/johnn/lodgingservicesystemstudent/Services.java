@@ -45,22 +45,21 @@ public class Services extends Service {
 
     @Override
     public void onCreate() {
-        Log.e("Service," ,"onCreated");
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e("Service," ,"onStartCommand");
+
         init();
-        Log.e("Service," ,"onStartCommandFinish");
+
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         try{
-            Log.e("Service," ,"onDestroy Called");
+
             client.disconnect();
         }catch (MqttException e){
             e.printStackTrace();
@@ -85,21 +84,23 @@ public class Services extends Service {
     private MqttCallback mqttCallback = new MqttCallback() {
         @Override
         public void connectionLost(Throwable throwable) {
-            Log.e("Connection", "connectionLost");
+
         }
 
         @Override
         public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-            Log.e("Connection", "messageArrived");
+
             String message = mqttMessage.toString();
             String splitDollar[] = message.split("\\$");
             String serverData[] = c.convertToString(splitDollar[0]);
             String notiData[] = c.convertToString(splitDollar[1]);
 
             String command = serverData[0];
-            Log.e("command", command);
+
             if(command.equals("004841")){
-                Log.e("notiData", notiData[3]);
+
+                SharedPreferences prefs = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
+                String device = prefs.getString("UserID", "UserID Not Found!");
                 if(notiData[3].equals("johnny96")){
                     checkNotifierClass(mqttMessage.toString());
                 }
@@ -109,21 +110,21 @@ public class Services extends Service {
 
         @Override
         public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-            Log.e("Connection", "deliveryComplete");
+
         }
     };
 
     private IMqttActionListener iMqttActionListener = new IMqttActionListener() {
         @Override
         public void onSuccess(IMqttToken iMqttToken) {
-            Log.e("Connection: ", "onSuccess");
+
             subscribe();
 
         }
 
         @Override
         public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-            Log.e("Connection: ", "onFailure");
+
         }
     };
 
@@ -142,10 +143,10 @@ public class Services extends Service {
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         if(info != null && info.isAvailable()){
             String name = info.getTypeName();
-            Log.e("MQTT Connection", "Name: " + name);
+
             return true;
         }else{
-            Log.e("MQTT Connection", "Name: Lost");
+
             return false;
         }
     }

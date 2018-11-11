@@ -52,8 +52,7 @@ public class Home extends AppCompatActivity
     MqttAndroidClient client;
     String topic = "MY/TARUC/LSS/000000001/PUB";
     int qos = 1;
-    //public static String broker = "tcp://test.mosquitto.org:1883";
-    public static String broker = "tcp://192.168.0.172:1883";
+    public static String broker = "tcp://test.mosquitto.org:1883";
     String clientId = "";
     MemoryPersistence persistence = new MemoryPersistence();
     Converter c = new Converter();
@@ -320,6 +319,12 @@ public class Home extends AppCompatActivity
             startActivity(intent);
         }else if(id == R.id.nav_viewAppointment){
             Intent intent = new Intent(this, ViewAppointment.class);
+            startActivity(intent);
+        }else if(id == R.id.nav_code_generate){
+            Intent intent = new Intent(this, CodeGenerate.class);
+            startActivity(intent);
+        }else if(id == R.id.nav_view_lease){
+            Intent intent = new Intent(this,ViewLeaseStatus.class);
             startActivity(intent);
         }
 

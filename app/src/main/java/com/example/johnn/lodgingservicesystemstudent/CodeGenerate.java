@@ -1,5 +1,6 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,15 +23,6 @@ import service.Converter;
 
 public class CodeGenerate extends AppCompatActivity {
 
-    MqttAndroidClient client;
-    String topic = "MY/TARUC/LSS/000000001/PUB";
-    int qos = 1;
-    String broker = Home.broker;
-    String clientID = "";
-    String receiverClientId = "";
-    MemoryPersistence persistence = new MemoryPersistence();
-    final Converter c = new Converter();
-
     TextView txtNotice;
     TextView txtCode;
     Button myButton;
@@ -40,81 +32,14 @@ public class CodeGenerate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_generate);
 
-        SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
-        clientID = userDetails.getString("UserID","");
-        receiverClientId = "serverLSSserver";
-
         txtNotice = (TextView)findViewById(R.id.txtNotice);
+        String noticeMessage = "NOTED: Do not simply share to others." +
+                "Because this is the code make used of involving in contact purpose.";
+        txtNotice.setText(noticeMessage);
         txtCode = (TextView)findViewById(R.id.txtCode);
         myButton = (Button)findViewById(R.id.generateProcced);
         myButton.setText("Generate Code");
 
-    }
-
-    public void Connect() throws Exception {
-
-        client = new MqttAndroidClient(this, broker, clientID, persistence);
-        MqttConnectOptions connOpts = new MqttConnectOptions();
-        connOpts.setCleanSession(false);
-
-        client.connect(connOpts, new IMqttActionListener() {
-            @Override
-            public void onSuccess(IMqttToken iMqttToken) {
-                Subscribe();
-                Log.e("code generated", "onSuccess");
-
-
-            }
-
-            @Override
-            public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                Log.e("code generated", "on failure");
-            }
-        });
-        client.setCallback(new MqttCallback() {
-            @Override
-            public void connectionLost(Throwable throwable) {
-
-            }
-
-            @Override
-            public void messageArrived(String s, MqttMessage mqttMessage) {
-
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
-            }
-        });
-    }
-
-    public void Publish(String payload) {
-        try {
-            MqttMessage message = new MqttMessage(payload.getBytes());
-            message.setQos(qos);
-            client.publish(topic, message);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void Subscribe() {
-        try {
-            client.subscribe(topic, qos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        try {
-            Connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void codeBtn(View v){
@@ -126,7 +51,10 @@ public class CodeGenerate extends AppCompatActivity {
 
         }
         if(btnText.equals("Send Code")){
-
+            Intent intent = new Intent(getApplicationContext(), CodeChoosePeople.class);
+            intent.putExtra("myCode", txtCode.getText().toString());
+            finish();
+            startActivity(intent);
         }
     }
 

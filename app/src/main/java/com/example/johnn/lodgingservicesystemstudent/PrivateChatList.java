@@ -151,10 +151,12 @@ public class PrivateChatList extends AppCompatActivity {
                         ml.add(new PrivateChat(value[8],value[4],value[5],value[6],value[7]));
                         privateChatAdapter.setID(clientId);
                         privateChatAdapter.notifyDataSetChanged();
+                        mMessageRecycler.smoothScrollToPosition(privateChatAdapter.getItemCount()-1);
                     }else if(receiverClientID.equals(value[6]+7) && (value[7]+7).equals(clientId)){
                         ml.add(new PrivateChat(value[8],value[4],value[5],value[6],value[7]));
                         privateChatAdapter.setID(clientId);
                         privateChatAdapter.notifyDataSetChanged();
+                        mMessageRecycler.smoothScrollToPosition(privateChatAdapter.getItemCount()-1);
                     }
 
                 }
@@ -284,7 +286,9 @@ public class PrivateChatList extends AppCompatActivity {
                 }
             }
         }
+
         privateChatAdapter.notifyDataSetChanged();
+
 
         pb.dismiss();
     }

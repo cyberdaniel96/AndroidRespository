@@ -212,10 +212,11 @@ public class UpdateAppointment extends AppCompatActivity {
             app.setOwnerID(ownerID);
             app.setTenantID(tenantID);
             app.setStatus(status);
-            String[] splitAnd = app.getReason().split("AND");
+            app.setReason(reason);
+            //String[] splitAnd = app.getReason().split("AND");
 
-            String newReason = reason+"BY"+app.getTenantID() +"AND"+ splitAnd[1];
-            app.setReason(newReason);
+            //String newReason = reason+"BY"+app.getTenantID() +"AND"+ splitAnd[1];
+            //app.setReason(newReason);
             String payload = c.convertToHex(new String[]{"004827","000000000000000000000000",clientID,receiverClientId,
                     app.getAppointmentID(),app.getDateTime(),app.getReason(),app.getState(),
             app.getPriority(),app.getComment(),app.getStatus(),app.getLodgingID(),app.getTenantID(),app.getOwnerID()});

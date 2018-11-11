@@ -80,28 +80,29 @@ public class ViewAppointmentDetails extends AppCompatActivity {
             txtstatus.setTextColor(Color.rgb(255,0,0));
         }
 
-        String[] splitReason = app.getReason().split("AND");
-        String reasonTenant = splitReason[0];
-        String reasonOwner = splitReason[1];
-        String[] splitBYTenant = reasonTenant.split("BY");
-        String[] splitBYOwner = reasonOwner.split("BY");
-
-        /*
-        * 1. confirm both message are tenant and owner written
-        * 2. check is owner or written having the message
-        * 3. if having the message then show
-        * 4. no then invisible is setted*/
-
-        if(splitBYTenant[1].equals(app.getTenantID()) && splitBYOwner[1].equals(app.getOwnerID())){
-            if(app.getStatus().equals("rejected")) {
-                if (!splitBYOwner[0].equals("NOTHING")) {
-                    viewReason.setVisibility(View.VISIBLE);
-                    txtReason.setText(splitBYOwner[0]);
-                    txtReason.setVisibility(View.VISIBLE);
-                    txtReason.setTextColor(Color.RED);
-                }
-            }
-        }
+//        String[] splitReason = app.getReason().split("AND");
+//        String reasonTenant = splitReason[0];
+//        String reasonOwner = splitReason[1];
+//        String[] splitBYTenant = reasonTenant.split("BY");
+//        String[] splitBYOwner = reasonOwner.split("BY");
+//
+//        /*
+//        * 1. confirm both message are tenant and owner written
+//        * 2. check is owner or written having the message
+//        * 3. if having the message then show
+//        * 4. no then invisible is setted
+//        * */
+//
+//        if(splitBYTenant[1].equals(app.getTenantID()) && splitBYOwner[1].equals(app.getOwnerID())){
+//            if(app.getStatus().equals("rejected")) {
+//                if (!splitBYOwner[0].equals("NOTHING")) {
+//                    viewReason.setVisibility(View.VISIBLE);
+//                    txtReason.setText(splitBYOwner[0]);
+//                    txtReason.setVisibility(View.VISIBLE);
+//                    txtReason.setTextColor(Color.RED);
+//                }
+//            }
+//        }
     }
 
     public void remakeAppointment(View v){

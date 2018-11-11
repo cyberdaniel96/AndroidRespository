@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,35 +23,36 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+import domain.CodeGenerator;
 import domain.Message;
 import domain.PrivateChat;
 import service.Converter;
 
-public class Listed_Private_Chat extends AppCompatActivity {
+public class CodeChoosePeople extends AppCompatActivity {
 
     MqttAndroidClient client;
     String topic = "MY/TARUC/LSS/000000001/PUB";
     int qos = 1;
     String broker = Home.broker;
     String clientId = "";
+    String receiverClientID = "serverLSSserver";
     MemoryPersistence persistence = new MemoryPersistence();
     Converter c = new Converter();
     ProgressDialog pb;
     ListedPrivateChatAdapter adapter;
     private RecyclerView mMessageRecycler;
     List<Message> list = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listed__private__chat);
-        setTitle("Private Chat List");
+        setContentView(R.layout.activity_code_choose_people);
+
+        setTitle("Code Generator");
         pb = new ProgressDialog(this);
         pb.setCanceledOnTouchOutside(false);
         pb.setMessage("Loading...");
@@ -67,61 +67,55 @@ public class Listed_Private_Chat extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(false);
         mMessageRecycler.setLayoutManager(linearLayoutManager);
 
+
         adapter = new ListedPrivateChatAdapter(this, list);
         mMessageRecycler.setAdapter(adapter);
         pb.dismiss();
 
-        adapter.setOnItemClickListener(new ListedPrivateChatAdapter.MyOnClick() {
+        adapter.setOnItemClickListener(new ListedPrivateChatAdapter.MyOnClick(){
             @Override
-            public void onItemClick(int position, View v) {
-                Intent intent = new Intent(Listed_Private_Chat.this, PrivateChatList.class);
-                Message message2 = (PrivateChat)list.get(position);
-                intent.putExtra("lodgingOwner",((PrivateChat) message2).getReceiverID());
-                startActivity(intent);
-            }
-        });
+            public void onItemClick(int position, final View v) {
 
-        adapter.setOnItemLongClickListener(new ListedPrivateChatAdapter.MyOnLongClick() {
-            @Override
-            public boolean onItemLongClick(final int position, View v) {
-
-                AlertDialog.Builder alert = new AlertDialog.Builder(Listed_Private_Chat.this);
-                alert.setTitle("Deleting Message");
-                alert.setMessage(Html.fromHtml("<font color='#FF7F27'>Are you sure you want to delete??</font>"));
+                AlertDialog.Builder alert = new AlertDialog.Builder(CodeChoosePeople.this);
+                alert.setTitle("Confirmation");
+                alert.setMessage(Html.fromHtml("<font color='#FF7F27'>Are you sure you want to send to this person?</font>"));
                 alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PrivateChat chat = (PrivateChat) list.get(position);
-                        pb.show();
-                        delete(chat.getSenderID(), chat.getReceiverID(), "TENANT", chat.getDelStatus());
-                        pb.dismiss();
-                        onPageRefresh();
+
+                TextView name = v.findViewById(R.id.nametxt);
+                Intent intent = getIntent();
+                String randomCode = intent.getStringExtra("myCode");
+                String head = c.convertToHex(new String[]{
+                   "004847","000000000000000000000000",clientId,receiverClientID,""
+                });
+                CodeGenerator code = new CodeGenerator("",new Date(),new Date(),Integer.parseInt( randomCode),clientId.substring(0, clientId.length()-1));
+                String body = c.convertToHex(new String[]{
+                        code.getIssueDate(),
+                        code.getIssueTime(),
+                        String.format("%d", code.getVerifyCode()),
+                        code.getUserID()
+                });
+
+                String payload = head + "$" + body;
+                Publish(payload);
+                sendToChat("Code: "+randomCode,code.getIssueDate(),code.getIssueTime(),clientId.substring(0, clientId.length()-1),name.getText().toString());
+                finish();
+                Toast.makeText(getApplication(), "Code has been sent to owner: "+name.getText().toString(), Toast.LENGTH_LONG).show();
                     }
                 });
                 alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         dialog.dismiss();
                     }
                 });
                 alert.show();
-                return true;
             }
         });
 
-    }
-
-    public void delete(String sender, String receiver, String role, String status){
-        String command = "004837";
-        String reserve = "000000000000000000000000";
-        String senderClientId = clientId;//change to client id later
-        String receiverClientId = "serverLSSserver";
-
-        String[] payload = {command, reserve, senderClientId, receiverClientId, sender, receiver, role, status};
-        Publish(c.convertToHex(payload));
     }
 
     public void Connect() throws Exception {
@@ -169,8 +163,27 @@ public class Listed_Private_Chat extends AppCompatActivity {
 
             }
         });
+    }
 
+    public void sendToChat(String content,String date, String time, String sender, String receiver){
+        String command = "004833";
+        String reserve = "000000000000000000000000";
+        String senderClientId = clientId;
+        String receiverClientId = "serverLSSserver";
 
+        String payload = c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId,
+        content, date + " " + time, sender, receiver});
+        Publish(payload);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            Connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void Subscribe() {
@@ -186,18 +199,6 @@ public class Listed_Private_Chat extends AppCompatActivity {
             MqttMessage message = new MqttMessage(payload.getBytes());
             message.setQos(qos);
             client.publish(topic, message);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-       pb.show();
-        try {
-            Connect();
-            pb.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -232,8 +233,8 @@ public class Listed_Private_Chat extends AppCompatActivity {
         }
 
         for(int index = 0; index < appList.size(); index++){
-           PrivateChat chat = (PrivateChat) appList.get(index);
-           String splitStatus[] = chat.getDelStatus().split("AND");
+            PrivateChat chat = (PrivateChat) appList.get(index);
+            String splitStatus[] = chat.getDelStatus().split("AND");
 
             if(splitStatus[0].equals("NOTHING")){
                 if(list.isEmpty()){
@@ -259,11 +260,6 @@ public class Listed_Private_Chat extends AppCompatActivity {
 
     }
 
-    public void onPageRefresh(){
-        finish();
-        startActivity(getIntent());
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -273,13 +269,4 @@ public class Listed_Private_Chat extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }
