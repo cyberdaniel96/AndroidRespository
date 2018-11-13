@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -20,7 +23,9 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.util.ArrayList;
 import java.util.List;
 
+import domain.Lease;
 import domain.Lodging;
+import domain.Tenant;
 import service.Converter;
 
 public class ViewLeaseStatus extends AppCompatActivity {
@@ -33,10 +38,14 @@ public class ViewLeaseStatus extends AppCompatActivity {
     MemoryPersistence persistence = new MemoryPersistence();
     final Converter c = new Converter();
 
-    List<Lodging> list = new ArrayList<>();
+    List<Lodging> lodgingList = new ArrayList<>();
+    List<Lease> leaseList = new ArrayList<>();
     RecyclerView recyclerView;
     ViewLeaseStatusAdapter adapter;
     ProgressDialog pb;
+
+    int myposition = 0;
+    View view = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +61,17 @@ public class ViewLeaseStatus extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.viewLeaseStatus);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new ViewLeaseStatusAdapter(this, list);
+        adapter = new ViewLeaseStatusAdapter(this, lodgingList);
         recyclerView.setAdapter(adapter);
+
+        adapter.setOnClickListener(new ViewLeaseStatusAdapter.OnClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                Retrieve("GETTENANT", "LS00000");
+                ViewLeaseStatus.this.myposition = position;
+                ViewLeaseStatus.this.view = v;
+            }
+        });
 
     }
 
@@ -67,7 +85,7 @@ public class ViewLeaseStatus extends AppCompatActivity {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
                 Subscribe();
-                Retrieve();
+                Retrieve("GETLOD","");
                 Log.e("view lease", "onSuccess");
             }
 
@@ -148,39 +166,82 @@ public class ViewLeaseStatus extends AppCompatActivity {
         }
     }
 
-    public void Retrieve(){
+    public void Retrieve(String mycommand, String id){
         String command = "004849";
         String reserve = "000000000000000000000000";
         String senderClientID = clientId;
-
-
         String tenantID = "1610480";
 
-        String payload = c.convertToHex(new String[]{command, reserve, senderClientID, receiverClientId, ""}) + "$" + c.ToHex(tenantID);
+        String payload = "";
+        if(mycommand.equals("GETLOD")){
+            payload = c.convertToHex(new String[]{command, reserve, senderClientID, receiverClientId, ""}) + "$" + c.ToHex(tenantID) +"/"+ c.ToHex(mycommand);
+        }
+        if(mycommand.equals("GETTENANT")){
+            payload =  c.convertToHex(new String[]{command, reserve, senderClientID, receiverClientId, ""}) + "$" + c.ToHex(tenantID) +"/"+ c.ToHex(mycommand)+"/"+c.ToHex(id);
+        }
+        Log.e("retrieve", mycommand);
+
         Publish(payload);
     }
 
     public void SetData(String message){
-        list.clear();
+
         pb.show();
         String[] splitDollar = message.split("\\$");
         String[] serverData = c.convertToString(splitDollar[0]);
 
-        String lodgingData[] = splitDollar[1].split("@");
-        int getLodgingcount = Integer.parseInt(c.convertToString(lodgingData[0])[3]);
-        Log.e("out", getLodgingcount + "H");
-        for(int i = 0; i < getLodgingcount; i++){
-            String[] arrLod = c.convertToString(lodgingData[i]);
-            Lodging lodging = new Lodging();
-            lodging.setImage(arrLod[0]);
-            lodging.setTitle(arrLod[1]);
-            lodging.setAddress(arrLod[2].replace("$", ","));
+        String[] data = splitDollar[1].split("@");
 
-            list.add(lodging);
+        //section get number of data
+        String[] firstdata = c.convertToString(data[0]);
+        String mycommand = firstdata[0];
+        if(mycommand.equals("GETLOD")){
+            lodgingList.clear();
+            leaseList.clear();
+            int numOfData = Integer.parseInt(firstdata[9]);
+            for(int index = 0; index < numOfData; index++){
+                String[] tempData = c.convertToString(data[index]);
 
+                Lease lease = new Lease();
+                lease.setLeaseID(tempData[1]);
+                lease.setDueDay(tempData[2]);
+                lease.setIssueDate(tempData[3]);
+                lease.setStatus(tempData[4]);
+                lease.setLodgingID(tempData[5]);
+                leaseList.add(lease);
+
+                Lodging lodging = new Lodging();
+                lodging.setImage(tempData[6]);
+                lodging.setTitle(tempData[7]);
+                lodging.setAddress(tempData[8].replace("$", ","));
+                lodgingList.add(lodging);
+            }
+
+            adapter.notifyDataSetChanged();
+            pb.dismiss();
         }
-        adapter.notifyDataSetChanged();
-        pb.dismiss();
+
+        if(mycommand.equals("GETTENANT")){
+            String[] myData = c.convertToString(splitDollar[1]);
+
+            Tenant t = new Tenant();
+            t.setLeaseID(myData[1]);
+            t.setRoomType(myData[2]);
+            t.setRole(myData[3]);
+            t.setLeaseStart(myData[4]);
+            t.setLeaseEnd(myData[5]);
+            t.setRent(Double.parseDouble(myData[6]));
+            t.setDeposit(Double.parseDouble(myData[7]));
+            t.setStatus(myData[8]);
+            t.setUserID(myData[11]);
+            t.setLeaseID(myData[12]);
+
+            PopupLease pop = new PopupLease(getApplicationContext(), leaseList.get(this.myposition));
+            pop.showWindows(this.view);
+
+            pb.dismiss();
+        }
+
     }
 
 }

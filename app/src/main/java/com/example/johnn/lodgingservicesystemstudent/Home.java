@@ -53,6 +53,7 @@ public class Home extends AppCompatActivity
     String topic = "MY/TARUC/LSS/000000001/PUB";
     int qos = 1;
     public static String broker = "tcp://test.mosquitto.org:1883";
+    //public static String broker = "tcp://192.168.42.188:1883";
     String clientId = "";
     MemoryPersistence persistence = new MemoryPersistence();
     Converter c = new Converter();

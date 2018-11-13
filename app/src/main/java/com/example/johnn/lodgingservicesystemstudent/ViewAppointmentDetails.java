@@ -5,15 +5,10 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import domain.Appointment;
 
@@ -47,7 +42,7 @@ public class ViewAppointmentDetails extends AppCompatActivity {
 
 
         txtAppointmentID = (TextView)findViewById(R.id.txtAppointmentID);
-        txtDate = (TextView)findViewById(R.id.txtDate);
+        txtDate = (TextView)findViewById(R.id.txtIssueDate);
         txtTime = (TextView)findViewById(R.id.txtTime);
         txtownerID = (TextView)findViewById(R.id.txtOwnerID);
         txttenantID = (TextView)findViewById(R.id.txtTenantID);

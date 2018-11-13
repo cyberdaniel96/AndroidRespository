@@ -25,16 +25,18 @@ public class ViewLeaseStatusAdapter extends RecyclerView.Adapter {
     TextView txtTitle;
     TextView txtAddress;
 
+    private OnClickListener onClickListener;
+
     public ViewLeaseStatusAdapter(Context context, List<Lodging> list) {
         this.context = context;
         this.list = list;
     }
 
-    private class ViewHolder extends RecyclerView.ViewHolder{
+    private class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public ViewHolder(View itemView) {
             super(itemView);
-
+            itemView.setOnClickListener(this);
             lodgingImage =  (ImageView)itemView.findViewById(R.id.imgLodging);
             txtTitle = (TextView)itemView.findViewById(R.id.txtTitle);
             txtAddress = (TextView)itemView.findViewById(R.id.txtAddress);
@@ -49,6 +51,11 @@ public class ViewLeaseStatusAdapter extends RecyclerView.Adapter {
                     .load(lodging.getAddress())
                     .transform(new CircleTransform(itemView.getContext()))
                     .into(lodgingImage);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onClickListener.onClick(v, getAdapterPosition());
         }
     }
 
@@ -68,5 +75,13 @@ public class ViewLeaseStatusAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public void setOnClickListener(OnClickListener onClickListener){
+        this.onClickListener = onClickListener;
+    }
+
+    interface OnClickListener{
+        void onClick(View v, int position);
     }
 }

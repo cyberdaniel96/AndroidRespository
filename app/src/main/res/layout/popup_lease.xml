@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/has_appointment"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txtLeaseDetail"
+        style="@style/header"
+        android:layout_width="320dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="8dp"
+        android:text="   Lease Detail:"
+        android:textColor="@color/background_today"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/viewStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="20dp"
+        android:text="Status :"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtLeaseDetail" />
+
+    <TextView
+        android:id="@+id/viewIssueDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="20dp"
+        android:text="Issue Date :"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewStatus" />
+
+    <TextView
+        android:id="@+id/viewDueDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="24dp"
+        android:text="Due Day :"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewIssueDate" />
+
+    <TextView
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="44dp"
+        android:text="Active"
+        android:textColor="#00FF00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtLeaseDetail" />
+
+    <TextView
+        android:id="@+id/txtIssueDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="44dp"
+        android:text="2018-01-01"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStatus"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/txtDueDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="44dp"
+        android:text="End of the month"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtIssueDate"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/textView"
+        style="@style/header"
+        android:layout_width="320dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="148dp"
+        android:layout_marginEnd="8dp"
+        android:text="   Tenant Details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtLeaseDetail" />
+
+</android.support.constraint.ConstraintLayout>

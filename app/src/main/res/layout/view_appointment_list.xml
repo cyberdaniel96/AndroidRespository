@@ -92,10 +92,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button1"
         app:layout_constraintStart_toEndOf="@+id/viewTime"
-        app:layout_constraintTop_toBottomOf="@+id/txtDate" />
+        app:layout_constraintTop_toBottomOf="@+id/txtIssueDate" />
 
     <TextView
-        android:id="@+id/txtDate"
+        android:id="@+id/txtIssueDate"
         android:layout_width="62dp"
         android:layout_height="18dp"
         android:layout_marginStart="35dp"

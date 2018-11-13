@@ -39,4 +39,11 @@
         <item name="android:background">@drawable/has_appointment</item>
     </style>
 
+    <style name="header">
+        <item name="android:id">@android:id/text1</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">#3232ff</item>
+    </style>
 </resources>
