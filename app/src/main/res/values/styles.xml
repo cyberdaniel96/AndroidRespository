@@ -46,4 +46,8 @@
         <item name="android:textSize">14sp</item>
         <item name="android:background">#3232ff</item>
     </style>
+
+    <style name="spiinerColor">
+        <item name="android:textColor">#000000</item>
+    </style>
 </resources>

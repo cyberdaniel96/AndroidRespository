@@ -43,7 +43,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginRight="2dp"
             android:layout_toLeftOf="@+id/spinTime"
-            android:padding="10dp" />
+            android:padding="10dp"
+            />
 
         <Spinner
             android:id="@id/spinTime"

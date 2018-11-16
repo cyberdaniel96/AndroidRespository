@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:layout_editor_absoluteY="81dp">
 
 
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/has_appointment"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp"
-        android:visibility="gone"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/imageView2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:src="@drawable/has_appointment"-->
+        <!--android:visibility="gone"-->
+        <!--tools:layout_editor_absoluteX="192dp"-->
+        <!--tools:layout_editor_absoluteY="256dp" />-->
 
     <TextView
         android:id="@+id/txtLeaseDetail"
@@ -21,7 +24,7 @@
         android:layout_width="320dp"
         android:layout_height="19dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="   Lease Detail:"
         android:textColor="@color/background_today"
@@ -33,8 +36,8 @@
         android:id="@+id/viewStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="16dp"
         android:text="Status :"
         android:textColor="@android:color/black"
         android:textStyle="bold"
@@ -45,8 +48,8 @@
         android:id="@+id/viewIssueDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="16dp"
         android:text="Issue Date :"
         android:textColor="@android:color/black"
         android:textStyle="bold"
@@ -57,8 +60,8 @@
         android:id="@+id/viewDueDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
         android:text="Due Day :"
         android:textColor="@android:color/black"
         android:textStyle="bold"
@@ -69,34 +72,43 @@
         android:id="@+id/txtStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="44dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="72dp"
         android:text="Active"
         android:textColor="#00FF00"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.948"
+        app:layout_constraintStart_toEndOf="@+id/viewStatus"
         app:layout_constraintTop_toBottomOf="@+id/txtLeaseDetail" />
 
     <TextView
         android:id="@+id/txtIssueDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="44dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="56dp"
         android:text="2018-01-01"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtStatus"
-        android:textColor="@android:color/black"/>
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/viewIssueDate"
+        app:layout_constraintTop_toBottomOf="@+id/txtStatus" />
 
     <TextView
         android:id="@+id/txtDueDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="44dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="52dp"
         android:text="End of the month"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtIssueDate"
-        android:textColor="@android:color/black"/>
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/viewDueDay"
+        app:layout_constraintTop_toBottomOf="@+id/txtIssueDate" />
 
     <TextView
         android:id="@+id/textView"
@@ -104,11 +116,253 @@
         android:layout_width="320dp"
         android:layout_height="19dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="44dp"
         android:layout_marginEnd="8dp"
         android:text="   Tenant Details"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtLeaseDetail" />
+        app:layout_constraintTop_toBottomOf="@+id/txtDueDay" />
+
+    <TextView
+        android:id="@+id/viewUserID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:text="User ID :"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/viewMyStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="224dp"
+        android:layout_marginTop="12dp"
+        android:text="Status :"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/viewRole"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Role :"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewUserID" />
+
+    <TextView
+        android:id="@+id/viewRoomType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Room Type :"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewRole" />
+
+    <TextView
+        android:id="@+id/viewRent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Rental :"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewRoomType" />
+
+    <TextView
+        android:id="@+id/viewDeposit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="224dp"
+        android:layout_marginTop="8dp"
+        android:text="Deposit :"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewMyStatus" />
+
+    <TextView
+        android:id="@+id/viewLeaseStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Lease Started"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewRent" />
+
+    <TextView
+        android:id="@+id/viewLeaseEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Lease End :"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewLeaseStart" />
+
+    <TextView
+        android:id="@+id/txtUserID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="12dp"
+        android:text="1610480"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/txtRole"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="8dp"
+        android:text="Tenant"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtUserID" />
+
+    <TextView
+        android:id="@+id/txtRoomType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="8dp"
+        android:text="Big"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtRole" />
+
+    <TextView
+        android:id="@+id/txtRental"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="8dp"
+        android:text="500"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtRoomType" />
+
+    <TextView
+        android:id="@+id/txtLeaseStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="8dp"
+        android:text="01-01-2018"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtRental" />
+
+    <TextView
+        android:id="@+id/txtMyStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:text="Pending"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toEndOf="@+id/viewMyStatus"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/txtDeposit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="50"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/viewDeposit"
+        app:layout_constraintTop_toBottomOf="@+id/txtMyStatus" />
+
+    <TextView
+        android:id="@+id/txtLeaseEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="8dp"
+        android:text="02-02-2018"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtLeaseStart" />
+
+    <RadioGroup
+        android:id="@+id/rdOptionalGroup"
+        android:layout_width="303dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="172dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <RadioButton
+            android:id="@+id/rdAccept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="Accept"
+            android:background="@drawable/optional"
+            android:textColor="@android:color/black"/>
+
+        <RadioButton
+            android:id="@+id/rdReject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/black"
+            android:background="@drawable/optional"
+            android:text="Reject" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/txtReason"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="5dp"
+        android:ems="10"
+        android:hint="Enter Reason"
+        android:textColorHint="#d3d3d3"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rdOptionalGroup" />
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="Submit"
+        android:background="#00e500"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtReason" />
 
 </android.support.constraint.ConstraintLayout>

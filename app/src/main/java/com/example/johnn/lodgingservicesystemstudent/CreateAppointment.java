@@ -101,7 +101,7 @@ public class CreateAppointment extends AppCompatActivity {
         dateList.add("10/10/2018");
         dateList.add("9/10/2018");
         String [] dateArray = dateList.toArray(new String[dateList.size()]);
-        ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, dateArray);
+        ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dateArray);
         dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinDate.setAdapter(dateAdapter);
 
@@ -109,7 +109,7 @@ public class CreateAppointment extends AppCompatActivity {
         timeList.add("06:30 PM");
         timeList.add("03:30 PM");
         String [] timeArray = timeList.toArray(new String[timeList.size()]);
-        ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, timeArray);
+        ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeArray);
         dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinTime.setAdapter(timeAdapter);
 
@@ -122,7 +122,7 @@ public class CreateAppointment extends AppCompatActivity {
         }
 
         String[] stateArr = stateList.toArray(new String[stateList.size()]);
-        ArrayAdapter<String> stateAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, stateArr);
+        ArrayAdapter<String> stateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stateArr);
         dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinLocation.setAdapter(stateAdapter);
 
@@ -136,20 +136,20 @@ public class CreateAppointment extends AppCompatActivity {
         client.connect(connOpts, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
-                Toast.makeText(getApplication(), "onSuccess", Toast.LENGTH_LONG).show();
+
                 Subscribe();
                 GetID();
             }
 //
             @Override
             public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                Toast.makeText(getApplication(), "onFailure", Toast.LENGTH_LONG).show();
+
             }
         });
         client.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable throwable) {
-                 Toast.makeText(getApplication(), "connectionLost", Toast.LENGTH_LONG).show();
+
             }
 
             @Override
@@ -213,7 +213,7 @@ public class CreateAppointment extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         try {
-            Toast.makeText(this,"onPause", Toast.LENGTH_LONG).show();
+
             client.disconnect();
 
         } catch (Exception e) {

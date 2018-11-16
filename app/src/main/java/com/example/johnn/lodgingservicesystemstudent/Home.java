@@ -59,7 +59,7 @@ public class Home extends AppCompatActivity
     Converter c = new Converter();
     List<Lodging> ll = new ArrayList<>();
     ProgressDialog pb;
-    public static String ip = "192.168.43.85";
+    public static String ip = "192.168.42.188";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

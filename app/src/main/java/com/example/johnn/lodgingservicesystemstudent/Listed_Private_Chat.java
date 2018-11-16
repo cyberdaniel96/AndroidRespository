@@ -122,6 +122,7 @@ public class Listed_Private_Chat extends AppCompatActivity {
 
         String[] payload = {command, reserve, senderClientId, receiverClientId, sender, receiver, role, status};
         Publish(c.convertToHex(payload));
+        Toast.makeText(this, "This message has been deleted", Toast.LENGTH_LONG).show();
     }
 
     public void Connect() throws Exception {

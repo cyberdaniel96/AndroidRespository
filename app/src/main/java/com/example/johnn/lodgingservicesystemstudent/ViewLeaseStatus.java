@@ -67,9 +67,11 @@ public class ViewLeaseStatus extends AppCompatActivity {
         adapter.setOnClickListener(new ViewLeaseStatusAdapter.OnClickListener() {
             @Override
             public void onClick(View v, int position) {
-                Retrieve("GETTENANT", "LS00000");
+
                 ViewLeaseStatus.this.myposition = position;
                 ViewLeaseStatus.this.view = v;
+
+                Retrieve("GETTENANT", leaseList.get(myposition).getLeaseID());
             }
         });
 
@@ -223,8 +225,9 @@ public class ViewLeaseStatus extends AppCompatActivity {
 
         if(mycommand.equals("GETTENANT")){
             String[] myData = c.convertToString(splitDollar[1]);
-
+            pb.dismiss();
             Tenant t = new Tenant();
+
             t.setLeaseID(myData[1]);
             t.setRoomType(myData[2]);
             t.setRole(myData[3]);
@@ -236,10 +239,8 @@ public class ViewLeaseStatus extends AppCompatActivity {
             t.setUserID(myData[11]);
             t.setLeaseID(myData[12]);
 
-            PopupLease pop = new PopupLease(getApplicationContext(), leaseList.get(this.myposition));
+            PopupLease pop = new PopupLease(getApplicationContext(), leaseList.get(this.myposition), t);
             pop.showWindows(this.view);
-
-            pb.dismiss();
         }
 
     }

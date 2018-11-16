@@ -14,6 +14,7 @@ import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -88,8 +89,8 @@ public class ViewAppointment extends AppCompatActivity {
                         try {
 
                            cancel(app);
-                           // finish();
-                           // startActivity(getIntent());
+                            finish();
+                            startActivity(getIntent());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -228,7 +229,8 @@ public class ViewAppointment extends AppCompatActivity {
 
         cancelNotify(app.getOwnerID());
 
-       // Publish(payload);
+        Publish(payload);
+        Toast.makeText(this, "This Appointment has been cancelled.", Toast.LENGTH_LONG).show();
     }
 
     public void cancelNotify(String ownerID){
