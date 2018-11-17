@@ -96,11 +96,13 @@ public class CodeChoosePeople extends AppCompatActivity {
                         code.getIssueTime(),
                         String.format("%d", code.getVerifyCode()),
                         code.getUserID()
+
                 });
 
                 String payload = head + "$" + body;
                 Publish(payload);
                 sendToChat("Code: "+randomCode,code.getIssueDate(),code.getIssueTime(),clientId.substring(0, clientId.length()-1),name.getText().toString());
+                //codeNotifying(name.getText().toString(), randomCode);
                 finish();
                 Toast.makeText(getApplication(), "Code has been sent to owner: "+name.getText().toString(), Toast.LENGTH_LONG).show();
                     }
@@ -269,4 +271,24 @@ public class CodeChoosePeople extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+//    public void codeNotifying(String ownerID, String code){
+//        String serverData = c.convertToHex(new String[]{
+//                "004841",
+//                "000000000000000000000000",
+//                clientId,
+//                "serverLSSserver",
+//                "",
+//        });
+//
+//        String notificationData = c.convertToHex(new String[]{"Lodging Service System",
+//                "Your verification code is " + code,
+//                "VERIFICATION RECEIVED",
+//                ownerID});
+//
+//        String resourcesData =  "Hello" + "@" +"world";
+//
+//        String servicePayload = serverData + "$" + notificationData + "$" + resourcesData;
+//
+//    }
 }

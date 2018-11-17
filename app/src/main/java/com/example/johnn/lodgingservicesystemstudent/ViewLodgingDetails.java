@@ -227,7 +227,7 @@ public class ViewLodgingDetails extends AppCompatActivity {
         contactNo.setText("Contact No: " + c.ToString(datas[13]));
         email.setText("Email: " + c.ToString(datas[14]));
         expireDate.setText("Expire Date: " + c.ToString(datas[11]));
-        ownerId.setText("Owner ID: " + c.ToString(datas[17]));
+        ownerId.setText("Owner ID: " + c.ToString(datas[18]));
         Glide.with(this)
                 .load(c.ToString(datas[16]))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)

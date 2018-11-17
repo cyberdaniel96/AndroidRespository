@@ -119,7 +119,6 @@ public class PopupLease extends PopupWindow {
                 }else{
                     tenant.setStatus("Rejected");
                     tenant.setReason(txtReason.getText().toString());
-
                     String serverData = c.convertToHex(new String[]{
                             "004851",
                             "000000000000000000000000",
@@ -131,19 +130,38 @@ public class PopupLease extends PopupWindow {
                     String message = c.convertToHex(new String[]{
                             tenant.getStatus(),
                             tenant.getReason(),
-                            tenant.getUserID(),
-                            tenant.getLeaseID()
+                            tenant.getTenantID()
                     });
 
                     Services.publish(serverData +"$"+ message);
+                    pushNotification(false);
                     Toast.makeText(context, "Information Submitted", Toast.LENGTH_LONG).show();
                 }
 
-
             }
 
-            if(text.equals("Accept")){
+            RadioButton btn = (RadioButton)view.findViewById(R.id.rdAccept);
 
+            if(text.equals("Accept") && btn.isChecked()){
+                tenant.setStatus("Active");
+                tenant.setReason("non");
+                String serverData = c.convertToHex(new String[]{
+                        "004851",
+                        "000000000000000000000000",
+                        tenant.getTenantID() + 9,
+                        "serverLSSserver",
+                        ""
+                });
+
+                String message = c.convertToHex(new String[]{
+                        tenant.getStatus(),
+                        tenant.getReason(),
+                        tenant.getTenantID()
+                });
+
+                Services.publish(serverData +"$"+ message);
+                pushNotification(true);
+                Toast.makeText(context, "Information Submitted", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -176,7 +194,45 @@ public class PopupLease extends PopupWindow {
         showAtLocation(parent,Gravity.CENTER,0,0);
     }
 
-    public void sendData(boolean optional){
+    public void pushNotification(boolean optional){
+        if(optional == true){
+            String serverData = c.convertToHex(new String[]{
+                    "004841",
+                    "000000000000000000000000",
+                    tenant.getUserID() + 1,
+                    "serverLSSserver",
+                    "",
+            });
 
+            String notificationData = c.convertToHex(new String[]{"Lodging Service System",
+                    tenant.getUserID() + " accepted the lease",
+                    "LEASE ACCEPTED",
+                    tenant.getLeaseID()});
+
+            String resourcesData =  "Hello" + "@" +"world";
+
+            String servicePayload = serverData + "$" + notificationData + "$" + resourcesData;
+            Services.publish(servicePayload);
+        }
+
+        if(optional == false){
+            String serverData = c.convertToHex(new String[]{
+                    "004841",
+                    "000000000000000000000000",
+                    tenant.getUserID() + 1,
+                    "serverLSSserver",
+                    "",
+            });
+
+            String notificationData = c.convertToHex(new String[]{"Lodging Service System",
+                    tenant.getUserID() + " rejected the lease"+"REASON: " + tenant.getReason(),
+                    "LEASE REJECTED",
+                    tenant.getLeaseID()});
+
+            String resourcesData =  "Hello" + "@" +"world";
+
+            String servicePayload = serverData + "$" + notificationData + "$" + resourcesData;
+            Services.publish(servicePayload);
+        }
     }
 }

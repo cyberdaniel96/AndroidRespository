@@ -88,7 +88,7 @@ public class ViewAppointment extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
 
-                           cancel(app);
+                            cancel(app);
                             finish();
                             startActivity(getIntent());
                         } catch (Exception e) {
@@ -136,7 +136,7 @@ public class ViewAppointment extends AppCompatActivity {
 
             @Override
             public void messageArrived(String s, MqttMessage mqttMessage) {
-                System.out.println("Message Arrived");
+
                 Converter c = new Converter();
                 String[] datas = mqttMessage.toString().split("\\$");
                 String[] head = c.convertToString(datas[0]);
@@ -225,33 +225,14 @@ public class ViewAppointment extends AppCompatActivity {
 
         String appID = app.getAppointmentID();
 
-        String payload =  c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, appID});
+        String payload =  c.convertToHex(new String[]{command, reserve, senderClientId, receiverClientId, appID, app.getOwnerID()});
 
-        cancelNotify(app.getOwnerID());
+
 
         Publish(payload);
         Toast.makeText(this, "This Appointment has been cancelled.", Toast.LENGTH_LONG).show();
     }
 
-    public void cancelNotify(String ownerID){
-        String serverData = c.convertToHex(new String[]{
-                "004841",
-                "000000000000000000000000",
-                clientId,
-                receiverClientId,
-                "",
-        });
-
-        String notificationData = c.convertToHex(new String[]{"Cancel Appointment",
-                clientId.substring(0, clientId.length() - 1) +" cancelled the appointment",
-                "APPOINTMENT CANCEL",
-                ownerID});
-
-        String resourcesData =  c.ToHex("Appointment") + "@" + c.ToHex("Resouces");
-
-        String servicePayload = serverData + "$" + notificationData + "$" + resourcesData;
-        Services.publish(servicePayload);
-    }
 
     @Override
     public void onBackPressed() {

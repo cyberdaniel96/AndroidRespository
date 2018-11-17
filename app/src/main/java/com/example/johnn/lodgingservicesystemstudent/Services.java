@@ -20,8 +20,12 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import java.security.PublicKey;
+import java.util.HashMap;
+
 import domain.Appointment;
 import service.Converter;
+import service.SessionManager;
 
 public class Services extends Service {
 
@@ -59,7 +63,6 @@ public class Services extends Service {
     @Override
     public void onDestroy() {
         try{
-
             client.disconnect();
         }catch (MqttException e){
             e.printStackTrace();
@@ -96,12 +99,13 @@ public class Services extends Service {
             String notiData[] = c.convertToString(splitDollar[1]);
 
             String command = serverData[0];
-
+            Log.e("Hey", command);
             if(command.equals("004841")){
-
-                SharedPreferences prefs = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
-                String device = prefs.getString("UserID", "UserID Not Found!");
-                if(notiData[3].equals("johnny96")){
+                Log.e("Hey", command);
+                SessionManager session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                String UserID = user.get(SessionManager.KEY_ID);
+                if(notiData[3].equals(UserID)){
                     checkNotifierClass(mqttMessage.toString());
                 }
             }
@@ -127,6 +131,8 @@ public class Services extends Service {
 
         }
     };
+
+
 
     private void doClientConnection() {
         if(!client.isConnected() && isConnectIsNormal()){
@@ -186,11 +192,48 @@ public class Services extends Service {
 
             switch (notiType) {
                 case "CANCEL":
-                    AppointmentNotifier.CancelAppointment(getApplicationContext(), title, content);
+                    AllNotification.CancelAppointment(getApplicationContext(), title, content);
                     break;
                 default:
                     break;
             }
         }
+
+        if(clsCommand.equals("LEASE")){
+            String title = notiData[0];
+            String content = notiData[1];
+            String[] resourceData = data[2].split("@");
+
+            switch (notiType) {
+                case "RECEIVED":
+                    Log.e("LEase", "received already");
+                    AllNotification.LeaseReceived(getApplicationContext(), title, content);
+                    Log.e("LEase", "done");
+                    break;
+                case "TERMINATED":
+                    AllNotification.LeaseReceived(getApplicationContext(),title, content);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if(clsCommand.equals("RENTAL")){
+            String title = notiData[0];
+            String content = notiData[1];
+            String[] resourceData = data[2].split("@");
+
+            switch (notiType) {
+                case "UPLOADED":
+                    Log.e("LEase", "received already");
+                    AllNotification.LeaseReceived(getApplicationContext(), title, content);
+                    Log.e("LEase", "done");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
     }
 }

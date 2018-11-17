@@ -229,7 +229,6 @@ public class CreateAppointment extends AppCompatActivity {
     public void setID(String message){
         String[] data = c.convertToString(message);
         String id = data[4];
-        System.out.println(id);
         txtAppointmentID.setText(id);
     }
 

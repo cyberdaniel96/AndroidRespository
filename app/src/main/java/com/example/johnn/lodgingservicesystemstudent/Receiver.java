@@ -18,7 +18,6 @@ public class Receiver extends BroadcastReceiver {
         if(!noConnection){
             context.startService(new Intent(context, Services.class));
         }
-
         if(myAction.equals("ACTION_2")){
 
         }

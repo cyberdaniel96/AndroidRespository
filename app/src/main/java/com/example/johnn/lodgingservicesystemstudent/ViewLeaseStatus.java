@@ -104,7 +104,7 @@ public class ViewLeaseStatus extends AppCompatActivity {
 
             @Override
             public void messageArrived(String s, MqttMessage mqttMessage) {
-                System.out.println("Message Arrived");
+
                 Converter c = new Converter();
                 String[] datas = mqttMessage.toString().split("\\$");
                 String[] head = c.convertToString(datas[0]);
@@ -228,7 +228,7 @@ public class ViewLeaseStatus extends AppCompatActivity {
             pb.dismiss();
             Tenant t = new Tenant();
 
-            t.setLeaseID(myData[1]);
+            t.setTenantID(myData[1]);
             t.setRoomType(myData[2]);
             t.setRole(myData[3]);
             t.setLeaseStart(myData[4]);

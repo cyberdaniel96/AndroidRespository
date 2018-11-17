@@ -150,7 +150,6 @@ public class Listed_Private_Chat extends AppCompatActivity {
 
             @Override
             public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-                System.out.println("Message Arrived");
                 Converter c = new Converter();
                 String datas[] = mqttMessage.toString().split("\\$");
                 String[] head = datas[0].split("/");
@@ -234,20 +233,23 @@ public class Listed_Private_Chat extends AppCompatActivity {
 
         for(int index = 0; index < appList.size(); index++){
            PrivateChat chat = (PrivateChat) appList.get(index);
-           String splitStatus[] = chat.getDelStatus().split("AND");
+           if(!chat.getReceiverID().equals(clientId.substring(0, clientId.length()-1))){
+               String splitStatus[] = chat.getDelStatus().split("AND");
 
-            if(splitStatus[0].equals("NOTHING")){
-                if(list.isEmpty()){
-                    list.add(chat);
-                    listConsists.add(chat.getReceiverID());
-                }else if(!list.isEmpty()) {
-                    TextView visibility = (TextView)findViewById(R.id.txtNoRecord);
-                    visibility.setVisibility(View.GONE);
-                    if (!listConsists.contains(chat.getReceiverID())) {
-                        list.add(chat);
-                    }
-                }
-            }
+               if(splitStatus[0].equals("NOTHING")){
+                   if(list.isEmpty()){
+                       list.add(chat);
+                       listConsists.add(chat.getReceiverID());
+                   }else if(!list.isEmpty()) {
+                       TextView visibility = (TextView)findViewById(R.id.txtNoRecord);
+                       visibility.setVisibility(View.GONE);
+                       if (!listConsists.contains(chat.getReceiverID())) {
+                           list.add(chat);
+                       }
+                   }
+               }
+           }
+
         }
 
         if(listConsists.isEmpty()){

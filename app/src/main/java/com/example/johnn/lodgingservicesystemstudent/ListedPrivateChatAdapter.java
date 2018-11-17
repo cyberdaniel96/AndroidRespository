@@ -92,6 +92,7 @@ public class ListedPrivateChatAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Message message = (PrivateChat) list.get(position);
+
         ((ViewHolder) holder).bind(message);
     }
 
