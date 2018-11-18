@@ -31,7 +31,6 @@ public class Testing extends AppCompatActivity {
             {
                 // extract the extra-data in the Notification
                 String msg = extras.getString("MyData");
-                Log.e("DATA", msg);
 
             }
         }

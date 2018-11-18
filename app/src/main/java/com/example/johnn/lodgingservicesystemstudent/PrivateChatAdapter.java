@@ -56,7 +56,7 @@ public class PrivateChatAdapter extends RecyclerView.Adapter{
              content.setText(msg.getContent());
              time.setText(msg.getSentTime());
              String imageAddress = "http://"+Home.ip+"/img/User/"+name.getText().toString()+".jpg";
-             Log.e("Image", imageAddress);
+
              Glide.with(itemView.getContext())
                      .load(imageAddress)
                      .transform(new CircleTransform(itemView.getContext()))

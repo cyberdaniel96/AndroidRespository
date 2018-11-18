@@ -88,18 +88,18 @@ public class ViewLeaseStatus extends AppCompatActivity {
             public void onSuccess(IMqttToken iMqttToken) {
                 Subscribe();
                 Retrieve("GETLOD","");
-                Log.e("view lease", "onSuccess");
+
             }
 
             @Override
             public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                Log.e("view lease", "onFailure");
+
             }
         });
         client.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable throwable) {
-                Log.e("view lease", "connectionLost");
+
             }
 
             @Override
@@ -181,7 +181,7 @@ public class ViewLeaseStatus extends AppCompatActivity {
         if(mycommand.equals("GETTENANT")){
             payload =  c.convertToHex(new String[]{command, reserve, senderClientID, receiverClientId, ""}) + "$" + c.ToHex(tenantID) +"/"+ c.ToHex(mycommand)+"/"+c.ToHex(id);
         }
-        Log.e("retrieve", mycommand);
+
 
         Publish(payload);
     }

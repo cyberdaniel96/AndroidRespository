@@ -14,7 +14,7 @@ public class Receiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String myAction = intent.getAction();
         boolean noConnection = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-        Log.e("my action", myAction);
+
         if(!noConnection){
             context.startService(new Intent(context, Services.class));
         }

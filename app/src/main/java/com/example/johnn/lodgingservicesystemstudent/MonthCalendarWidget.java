@@ -17,6 +17,7 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -102,7 +103,6 @@ public class MonthCalendarWidget extends AppWidgetProvider {
 
                             }
                         }
-                        Log.e("HERE:::", appMap.isEmpty()+"");
 
                         redrawWidgets(context);
                     }
@@ -191,7 +191,7 @@ public class MonthCalendarWidget extends AppWidgetProvider {
                 app = appMap.get(action[1]);
                 Intent passIntent = new Intent(context, ViewAppointmentDetails.class);
                 passIntent.putExtra("anAppointment",app);
-                Log.e("out", action[0]);
+
 
                 context.startActivity(passIntent);
             }
@@ -303,6 +303,7 @@ public class MonthCalendarWidget extends AppWidgetProvider {
             headerRowRv.addView(R.id.row_container, dayRv);
         }
         rv.addView(R.id.calendar, headerRowRv);
+        Toast.makeText(context, appMap.isEmpty()+"", Toast.LENGTH_LONG).show();
         if (!appMap.isEmpty()) {
             saveMap(context, appMap);
             for (int week = 0; week < numWeeks; week++) {
@@ -396,10 +397,20 @@ public class MonthCalendarWidget extends AppWidgetProvider {
 
                     int cellLayoutResId = R.layout.cell_day;
 
+
+
+
+                    if (isToday) {
+                        cellLayoutResId = R.layout.cell_today;
+
+                    } else if (inMonth) {
+                        cellLayoutResId = R.layout.cell_day_this_month;
+                    }
+
+
                     RemoteViews cellRv = new RemoteViews(context.getPackageName(), cellLayoutResId);
                     cellRv.setTextViewText(android.R.id.text1,
                             Integer.toString(cal.get(Calendar.DAY_OF_MONTH)));
-
                     if (isFirstOfMonth) {
                         cellRv.setTextViewText(R.id.month_label, DateFormat.format("MMM", cal));
                     }

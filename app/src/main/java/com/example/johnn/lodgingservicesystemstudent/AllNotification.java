@@ -39,4 +39,17 @@ public class AllNotification{
                 .setAction("ACTION_1", "ACTION_1_TITLE");
         notify.buildNotification();
     }
+
+    public static void LeaseExpired(Context context, String title, String message){
+        Intent intent =  new Intent(context, ViewLeaseStatus.class);
+        Notify notify = new Notify(context)
+                .setCategory(NotificationCompat.EXTRA_MESSAGES)
+                .setChannel(1)
+                .setNotificationID(9)
+                .setDrawable(R.mipmap.ic_launcher_round)
+                .setTitle(title)
+                .setMessage(message)
+                .setIntent(intent);
+        notify.buildNotification();
+    }
 }

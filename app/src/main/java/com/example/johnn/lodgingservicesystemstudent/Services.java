@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -99,12 +100,11 @@ public class Services extends Service {
             String notiData[] = c.convertToString(splitDollar[1]);
 
             String command = serverData[0];
-            Log.e("Hey", command);
             if(command.equals("004841")){
-                Log.e("Hey", command);
                 SessionManager session = new SessionManager(getApplicationContext());
                 HashMap<String, String> user = session.getUserDetails();
                 String UserID = user.get(SessionManager.KEY_ID);
+
                 if(notiData[3].equals(UserID)){
                     checkNotifierClass(mqttMessage.toString());
                 }
@@ -184,14 +184,17 @@ public class Services extends Service {
         String clsCommand = notifyCommand[0];
         String notiType = notifyCommand[1];
 
-        if(clsCommand.equals("APPOINTMENT")){
+            if(clsCommand.equals("APPOINTMENT")){
 
             String title = notiData[0];
             String content = notiData[1];
             String[] resourceData = data[2].split("@");
 
             switch (notiType) {
-                case "CANCEL":
+                case "ACCEPTED":
+                    AllNotification.CancelAppointment(getApplicationContext(), title, content);
+                    break;
+                case "REJECTED":
                     AllNotification.CancelAppointment(getApplicationContext(), title, content);
                     break;
                 default:
@@ -204,36 +207,64 @@ public class Services extends Service {
             String content = notiData[1];
             String[] resourceData = data[2].split("@");
 
+            Log.e("output",notiType);
             switch (notiType) {
                 case "RECEIVED":
-                    Log.e("LEase", "received already");
                     AllNotification.LeaseReceived(getApplicationContext(), title, content);
-                    Log.e("LEase", "done");
                     break;
                 case "TERMINATED":
                     AllNotification.LeaseReceived(getApplicationContext(),title, content);
+                    break;
+                case "EXPIRED":
+                    AllNotification.LeaseExpired(getApplicationContext(),title, content);
                     break;
                 default:
                     break;
             }
         }
-
+        Log.e("first", notiType);
+        Log.e("sec", clsCommand);
         if(clsCommand.equals("RENTAL")){
+            String title = notiData[0];
+            String content = notiData[1];
+            String[] resourceData = data[2].split("@");
+            Log.e("first", notiType);
+            Log.e("sec", clsCommand);
+            switch (notiType) {
+                case "UPLOADED":
+                    AllNotification.LeaseReceived(getApplicationContext(), title, content);
+                    break;
+                case "EXPIRED":
+                    AllNotification.LeaseReceived(getApplicationContext(), title, content);
+                    break;
+                case "ACCEPTED":
+                    AllNotification.LeaseReceived(getApplicationContext(), title, content);
+                    break;
+                case "REJECTED":
+                    AllNotification.LeaseReceived(getApplicationContext(), title, content);
+                    break;
+                case "EDITED":
+                    AllNotification.LeaseReceived(getApplicationContext(), title, content);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        Toast.makeText(getApplicationContext(), clsCommand, Toast.LENGTH_LONG).show();
+        if(clsCommand.equals("PRIVATECHAT")){
             String title = notiData[0];
             String content = notiData[1];
             String[] resourceData = data[2].split("@");
 
             switch (notiType) {
-                case "UPLOADED":
-                    Log.e("LEase", "received already");
+                case "RECEIVED":
                     AllNotification.LeaseReceived(getApplicationContext(), title, content);
-                    Log.e("LEase", "done");
                     break;
                 default:
                     break;
             }
         }
-
 
     }
 }
