@@ -313,7 +313,7 @@ public class MonthCalendarWidget extends AppWidgetProvider {
                     boolean inYear = cal.get(Calendar.YEAR) == todayYear;
                     boolean isToday = inYear && inMonth && (cal.get(Calendar.DAY_OF_YEAR) == today);
                     boolean isFirstOfMonth = cal.get(Calendar.DAY_OF_MONTH) == 1;
-                    String dateInStr = cal.get(Calendar.DAY_OF_MONTH) +"/"+ (cal.get(Calendar.MONTH)+1) +"/"+cal.get(Calendar.YEAR);
+                    String dateInStr = cal.get(Calendar.DAY_OF_MONTH) +"-"+ (cal.get(Calendar.MONTH)+1) +"-"+cal.get(Calendar.YEAR);
                     boolean appDay = false;
 
                     //check contain
