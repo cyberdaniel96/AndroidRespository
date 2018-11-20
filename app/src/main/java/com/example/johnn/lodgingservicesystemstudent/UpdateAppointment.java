@@ -10,6 +10,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,10 +26,15 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import domain.Appointment;
+import domain.VisitTime;
 import service.Converter;
 import service.SessionManager;
 
@@ -43,6 +49,9 @@ public class UpdateAppointment extends AppCompatActivity {
     String receiverClientId = "";
     MemoryPersistence persistence = new MemoryPersistence();
     final Converter c = new Converter();
+
+    HashMap<String , List<String>> map = new HashMap<>();
+    List<String> dateList = new ArrayList<>();
 
 
     TextView txtAppointmentID;
@@ -78,23 +87,25 @@ public class UpdateAppointment extends AppCompatActivity {
         txtAppointmentID.setText(app.getAppointmentID());
         txtownerID.setText(app.getOwnerID());
         txttenantID.setText(app.getTenantID());
+        txtlodgingID.setText(app.getLodgingID());
+        spinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String date = spinDate.getItemAtPosition(position).toString();
+                List<String> myTime = map.get(date);
+                Toast.makeText(getApplicationContext(), myTime.isEmpty()+"", Toast.LENGTH_LONG).show();
+                String[] timeArray = myTime.toArray(new String[myTime.size()]);
+                ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(UpdateAppointment.this, android.R.layout.simple_spinner_item, timeArray);
+                timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinTime.setAdapter(timeAdapter);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-        List<String> dateList = new ArrayList<>();
-        dateList.add("10/10/2018");
-        dateList.add("9/10/2018");
-        String [] dateArray = dateList.toArray(new String[dateList.size()]);
-        ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dateArray);
-        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinDate.setAdapter(dateAdapter);
+            }
+        });
 
-        List<String> timeList = new ArrayList<>();
-        timeList.add("06:30 PM");
-        timeList.add("03:30 PM");
-        String [] timeArray = timeList.toArray(new String[timeList.size()]);
-        ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeArray);
-        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinTime.setAdapter(timeAdapter);
     }
 
     public void Connect() throws Exception {
@@ -107,6 +118,7 @@ public class UpdateAppointment extends AppCompatActivity {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
                 Subscribe();
+                GetAvailableTime();
 
             }
 
@@ -129,7 +141,10 @@ public class UpdateAppointment extends AppCompatActivity {
                 String command = c.ToString(data[0]);
                 String receiverClientId = c.ToString(data[3]);
                 if (receiverClientId.equals(clientID)) {
+                    if (command.equals("004852")) {
 
+                        SetData(mqttMessage.toString());
+                    }
                 }
 
             }
@@ -159,6 +174,57 @@ public class UpdateAppointment extends AppCompatActivity {
         }
     }
 
+    public void SetData(String message) {
+        map.clear();
+        String[] datas = message.split("\\$");
+        String[] head = datas[0].split("/");
+        int size = Integer.parseInt(c.ToString(head[4]));
+        for (int i = 0; i < size; i++) {
+            String[] body = datas[i + 1].split("/");
+            VisitTime vt = new VisitTime(
+                    c.ToString(body[0]), c.ToString(body[1]), c.ToString(body[2]), c.ToString(body[3]), c.ToString(body[4]), Integer.parseInt(c.ToString(body[5]))
+            );
+            String date = vt.getVisitDateTime().split(" ")[0];
+
+            String input = vt.getVisitDateTime().split(" ")[1];
+            DateFormat inputFormat = new SimpleDateFormat("HH:mm");
+            DateFormat outputFormat = new SimpleDateFormat("HH:mm aa");
+            String time = "";
+            try {
+                time = outputFormat.format(inputFormat.parse(input)).toUpperCase();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            if(map.isEmpty()){
+                List<String> temp  = new ArrayList<>();
+                temp.add(time);
+                map.put(date,temp);
+            }
+
+            if(!map.isEmpty()){
+                if(map.containsKey(date)){
+                    map.get(date).add(time);
+                }
+                if(!map.containsKey(date)){
+                    List<String> temp  = new ArrayList<>();
+                    temp.add(time);
+                    map.put(date, temp);
+                }
+            }
+        }
+
+        for ( String key : map.keySet() ) {
+            dateList.add(key);
+        }
+
+        String[] dateArray = dateList.toArray(new String[dateList.size()]);
+        ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dateArray);
+        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinDate.setAdapter(dateAdapter);
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -168,6 +234,13 @@ public class UpdateAppointment extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public void GetAvailableTime() {
+        Log.e("L ID::",app.getLodgingID());
+        String payload = c.convertToHex(new String[]{"004852", "000000000000000000000000", clientID, "serverLSSserver", app.getLodgingID()});
+        Publish(payload);
+    }
+
 
     public void updateConfirmation(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

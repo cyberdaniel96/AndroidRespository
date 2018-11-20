@@ -59,6 +59,7 @@ public class MonthCalendarWidget extends AppWidgetProvider {
     final Converter c = new Converter();
     private HashMap<String, Appointment> appMap = new HashMap<>();
     private Context context;
+
     //***********************************
     public void Connect() throws Exception {
 
@@ -91,15 +92,15 @@ public class MonthCalendarWidget extends AppWidgetProvider {
                 String reserve = head[1];
                 String senderID = head[2];
                 String receiverID = head[3];
-                if(receiverID.equals(clientId)){
-                    if(command.equals("004831")){
+                if (receiverID.equals(clientId)) {
+                    if (command.equals("004831")) {
                         int totalList = Integer.parseInt(head[4]);
                         for (int index = 1; index <= totalList; index++) {
                             String[] data = c.convertToString(datas[index]);
                             Appointment app = new Appointment(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9]);
-                            if (app.getStatus().equals("accepted")) {
+                            if (app.getStatus().equals("accept")) {
                                 String date = app.getDateTime().split("AND")[0];
-                                appMap.put(date,app);
+                                appMap.put(date, app);
 
                             }
                         }
@@ -135,8 +136,8 @@ public class MonthCalendarWidget extends AppWidgetProvider {
         }
     }
 
-    public void Retrieve(){
-        String payload = c.convertToHex(new String[]{"004831", "000000000000000000000000", clientId, "serverLSSserver",clientId.substring(0, clientId.length()-1)});
+    public void Retrieve() {
+        String payload = c.convertToHex(new String[]{"004831", "000000000000000000000000", clientId, "serverLSSserver", clientId.substring(0, clientId.length() - 1)});
         Publish(payload);
     }
 
@@ -149,7 +150,7 @@ public class MonthCalendarWidget extends AppWidgetProvider {
     private static final String ACTION_RESET_MONTH
             = "com.example.android.monthcalendarwidget.action.RESET_MONTH";
     private static final String Action_Day
-            ="com.example.android.monthcalendarwidget.DAY_CLICK";
+            = "com.example.android.monthcalendarwidget.DAY_CLICK";
 
     private static final String PREF_MONTH = "month";
     private static final String PREF_YEAR = "year";
@@ -161,7 +162,7 @@ public class MonthCalendarWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         SharedPreferences userDetails = context.getSharedPreferences("LoggedInUser", context.MODE_PRIVATE);
-        this.userID = userDetails.getString("UserID","");
+        this.userID = userDetails.getString("UserID", "");
         this.clientId = userID + 7;
         this.context = context;
 
@@ -184,13 +185,13 @@ public class MonthCalendarWidget extends AppWidgetProvider {
         String[] action = intent.getAction().split("@");
         this.appMap = getMap(context);
 
-        if(!appMap.isEmpty()){
+        if (!appMap.isEmpty()) {
 
-            if(Action_Day.equals(action[0])){
+            if (Action_Day.equals(action[0])) {
                 Appointment app = null;
                 app = appMap.get(action[1]);
                 Intent passIntent = new Intent(context, ViewAppointmentDetails.class);
-                passIntent.putExtra("anAppointment",app);
+                passIntent.putExtra("anAppointment", app);
 
 
                 context.startActivity(passIntent);
@@ -303,7 +304,7 @@ public class MonthCalendarWidget extends AppWidgetProvider {
             headerRowRv.addView(R.id.row_container, dayRv);
         }
         rv.addView(R.id.calendar, headerRowRv);
-        Toast.makeText(context, appMap.isEmpty()+"", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, appMap.isEmpty() + "", Toast.LENGTH_LONG).show();
         if (!appMap.isEmpty()) {
             saveMap(context, appMap);
             for (int week = 0; week < numWeeks; week++) {
@@ -313,12 +314,13 @@ public class MonthCalendarWidget extends AppWidgetProvider {
                     boolean inYear = cal.get(Calendar.YEAR) == todayYear;
                     boolean isToday = inYear && inMonth && (cal.get(Calendar.DAY_OF_YEAR) == today);
                     boolean isFirstOfMonth = cal.get(Calendar.DAY_OF_MONTH) == 1;
-                    String dateInStr = cal.get(Calendar.DAY_OF_MONTH) +"-"+ (cal.get(Calendar.MONTH)+1) +"-"+cal.get(Calendar.YEAR);
+                    String dateInStr = cal.get(Calendar.DAY_OF_MONTH) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.YEAR);
                     boolean appDay = false;
 
                     //check contain
-                    if(appMap.containsKey(dateInStr)){
-                       appDay = true;
+                    if (appMap.containsKey(dateInStr)) {
+
+                        appDay = true;
                     }
 
 
@@ -336,12 +338,12 @@ public class MonthCalendarWidget extends AppWidgetProvider {
                     }
                     if (appDay) {
                         cellLayoutResId = R.layout.cell_has_appointment;
-                        intent.setAction(Action_Day+"@"+dateInStr);
+                        intent.setAction(Action_Day + "@" + dateInStr);
                         intent.putExtra("Layout_ID", R.layout.cell_has_appointment);
                     }
                     if (appDay && isToday) {
                         cellLayoutResId = R.layout.cell_has_appointment;
-                        intent.setAction(Action_Day+"@"+dateInStr);
+                        intent.setAction(Action_Day + "@" + dateInStr);
                         intent.putExtra("Layout_ID", R.layout.cell_has_appointment);
                     }
                     RemoteViews cellRv = new RemoteViews(context.getPackageName(), cellLayoutResId);
@@ -382,7 +384,7 @@ public class MonthCalendarWidget extends AppWidgetProvider {
                 rv.setViewVisibility(R.id.month_bar, numWeeks <= 1 ? View.GONE : View.VISIBLE);
                 appWidgetManager.updateAppWidget(appWidgetId, rv);
             }
-        }else{
+        } else {
 
             for (int week = 0; week < numWeeks; week++) {
                 RemoteViews rowRv = new RemoteViews(context.getPackageName(), R.layout.row_week);
@@ -391,13 +393,11 @@ public class MonthCalendarWidget extends AppWidgetProvider {
                     boolean inYear = cal.get(Calendar.YEAR) == todayYear;
                     boolean isToday = inYear && inMonth && (cal.get(Calendar.DAY_OF_YEAR) == today);
                     boolean isFirstOfMonth = cal.get(Calendar.DAY_OF_MONTH) == 1;
-                    String dateInStr = cal.get(Calendar.DAY_OF_MONTH) +"/"+ (cal.get(Calendar.MONTH)+1) +"/"+cal.get(Calendar.YEAR);
+                    String dateInStr = cal.get(Calendar.DAY_OF_MONTH) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR);
                     boolean appDay = false;
 
 
                     int cellLayoutResId = R.layout.cell_day;
-
-
 
 
                     if (isToday) {
@@ -454,30 +454,36 @@ public class MonthCalendarWidget extends AppWidgetProvider {
     }
 
 
-    public void saveMap(Context context, HashMap<String, Appointment> hashMap){
-        SharedPreferences.Editor sharedPreferences = context.getSharedPreferences("appMap",Context.MODE_PRIVATE).edit();
+    public void saveMap(Context context, HashMap<String, Appointment> hashMap) {
+        SharedPreferences.Editor sharedPreferences = context.getSharedPreferences("appMap", Context.MODE_PRIVATE).edit();
         sharedPreferences.clear();
         sharedPreferences.commit();
         HashMap<String, Appointment> tempMap = hashMap;
 
-        for(String key: tempMap.keySet()){
+        for (String key : tempMap.keySet()) {
             Appointment value = tempMap.get(key);
             sharedPreferences.putString(key, c.convertToHex(new String[]{value.getAppointmentID(), value.getDateTime(), value.getReason(),
-            value.getState(), value.getPriority(), value.getComment(),value.getState(), value.getLodgingID(), value.getTenantID(), value.getOwnerID()}));
+                    value.getState(), value.getPriority(), value.getComment(), value.getState(), value.getLodgingID(), value.getTenantID(), value.getOwnerID()}));
         }
         sharedPreferences.apply();
     }
 
-    public HashMap<String, Appointment> getMap(Context context){
+    public HashMap<String, Appointment> getMap(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("appMap", Context.MODE_PRIVATE);
         Map<String, ?> map = prefs.getAll();
         Map<String, Appointment> mapReturn = new HashMap<>();
-        for(String key: map.keySet()){
+        for (String key : map.keySet()) {
             String[] value = c.convertToString(map.get(key).toString());
-            Appointment app = new Appointment(value[0],value[1],value[2],value[3],value[4],value[5],value[6],value[7],value[8],value[9]);
+            Appointment app = new Appointment(value[0], value[1], value[2], value[3], value[4], value[5], value[6], value[7], value[8], value[9]);
             mapReturn.put(key, app);
         }
 
         return (HashMap<String, Appointment>) mapReturn;
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+        appMap.clear();
+        super.onDisabled(context);
     }
 }

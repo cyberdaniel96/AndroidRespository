@@ -55,7 +55,7 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
                 status.setText(appointment.getStatus());
                 status.setTextColor(Color.rgb(255,215,0));
             }
-            if(appointment.getStatus().equals("accepted")){
+            if(appointment.getStatus().equals("accept")){
                 status.setText(appointment.getStatus());
                 status.setTextColor(Color.rgb(124,252,0));
             }

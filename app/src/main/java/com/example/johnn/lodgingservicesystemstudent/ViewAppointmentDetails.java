@@ -66,7 +66,7 @@ public class ViewAppointmentDetails extends AppCompatActivity {
             txtstatus.setText(app.getStatus());
             txtstatus.setTextColor(Color.rgb(255,215,0));
         }
-        if(app.getStatus().equals("accepted")){
+        if(app.getStatus().equals("accept")){
             txtstatus.setText(app.getStatus());
             txtstatus.setTextColor(Color.rgb(124,252,0));
         }

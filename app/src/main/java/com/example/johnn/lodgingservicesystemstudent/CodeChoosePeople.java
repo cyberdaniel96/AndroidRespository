@@ -95,7 +95,8 @@ public class CodeChoosePeople extends AppCompatActivity {
                         code.getIssueDate(),
                         code.getIssueTime(),
                         String.format("%d", code.getVerifyCode()),
-                        code.getUserID()
+                        code.getUserID(),
+                        name.getText().toString()
 
                 });
 
@@ -236,17 +237,22 @@ public class CodeChoosePeople extends AppCompatActivity {
 
         for(int index = 0; index < appList.size(); index++){
             PrivateChat chat = (PrivateChat) appList.get(index);
-            String splitStatus[] = chat.getDelStatus().split("AND");
+            SharedPreferences prefs = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
+            if(!chat.getReceiverID().equals(prefs.getString("UserID", "UserID Not Found!"))) {
 
-            if(splitStatus[0].equals("NOTHING")){
-                if(list.isEmpty()){
-                    list.add(chat);
-                    listConsists.add(chat.getReceiverID());
-                }else if(!list.isEmpty()) {
-                    TextView visibility = (TextView)findViewById(R.id.txtNoRecord);
-                    visibility.setVisibility(View.GONE);
-                    if (!listConsists.contains(chat.getReceiverID())) {
+
+                String splitStatus[] = chat.getDelStatus().split("AND");
+
+                if (splitStatus[0].equals("NOTHING")) {
+                    if (list.isEmpty()) {
                         list.add(chat);
+                        listConsists.add(chat.getReceiverID());
+                    } else if (!list.isEmpty()) {
+                        TextView visibility = (TextView) findViewById(R.id.txtNoRecord);
+                        visibility.setVisibility(View.GONE);
+                        if (!listConsists.contains(chat.getReceiverID())) {
+                            list.add(chat);
+                        }
                     }
                 }
             }
@@ -272,23 +278,23 @@ public class CodeChoosePeople extends AppCompatActivity {
         }
     }
 
-//    public void codeNotifying(String ownerID, String code){
-//        String serverData = c.convertToHex(new String[]{
-//                "004841",
-//                "000000000000000000000000",
-//                clientId,
-//                "serverLSSserver",
-//                "",
-//        });
-//
-//        String notificationData = c.convertToHex(new String[]{"Lodging Service System",
-//                "Your verification code is " + code,
-//                "VERIFICATION RECEIVED",
-//                ownerID});
-//
-//        String resourcesData =  "Hello" + "@" +"world";
-//
-//        String servicePayload = serverData + "$" + notificationData + "$" + resourcesData;
-//
-//    }
+    public void codeNotifying(String ownerID, String code){
+        String serverData = c.convertToHex(new String[]{
+                "004841",
+                "000000000000000000000000",
+                clientId,
+                "serverLSSserver",
+                "",
+        });
+
+        String notificationData = c.convertToHex(new String[]{"Lodging Service System",
+                "Your verification code is " + code,
+                "VERIFICATION RECEIVED",
+                ownerID});
+
+        String resourcesData =  "Hello" + "@" +"world";
+
+        String servicePayload = serverData + "$" + notificationData + "$" + resourcesData;
+
+    }
 }

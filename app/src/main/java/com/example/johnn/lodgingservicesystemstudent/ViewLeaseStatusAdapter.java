@@ -2,6 +2,7 @@ package com.example.johnn.lodgingservicesystemstudent;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +47,8 @@ public class ViewLeaseStatusAdapter extends RecyclerView.Adapter {
         void bind(Lodging lodging){
             txtTitle.setText(lodging.getTitle());
             txtAddress.setText(lodging.getAddress());
-
             Glide.with(itemView.getContext())
-                    .load(lodging.getAddress())
+                    .load(lodging.getImage())
                     .transform(new CircleTransform(itemView.getContext()))
                     .into(lodgingImage);
         }
