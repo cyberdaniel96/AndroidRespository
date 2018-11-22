@@ -1,11 +1,13 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -34,10 +36,15 @@ public class ViewRentalLodging extends AppCompatActivity {
     final Converter c = new Converter();
 
     ArrayList<Lodging> lodgingArrayList = new ArrayList<>();
-    Rental rental = new Rental();
+    ArrayList<String> lLeaseID = new ArrayList<>();
+
+    ArrayList<Rental> listRentalHistory = new ArrayList<>();
+    ArrayList<Rental> listRentalCurrent = new ArrayList<>();
+
     RecyclerView recyclerView;
     ViewLeaseStatusAdapter adapter;
 
+    int adapterClickPosition = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +58,9 @@ public class ViewRentalLodging extends AppCompatActivity {
 
         adapter.setOnClickListener(new ViewLeaseStatusAdapter.OnClickListener() {
             @Override
-            public void onClick(View v, int position) {
-                Retreive("RENTAL", rental.getRentalID());
+            public void onClick(View v, int index) {
+                Retrieve("RENTAL", lLeaseID.get(index));
+                adapterClickPosition = index;
             }
         });
     }
@@ -67,8 +75,7 @@ public class ViewRentalLodging extends AppCompatActivity {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
                 Subscribe();
-                Retreive("LODGING", clientId.substring(0, clientId.length()-1));
-
+                Retrieve("LODGING", clientId.substring(0, clientId.length()-1));
             }
 
             @Override
@@ -98,8 +105,11 @@ public class ViewRentalLodging extends AppCompatActivity {
                         if(mycommand.equals("LODGING")){
                             SetLodgingData(mqttMessage.toString());
                         }
+
                         if(mycommand.equals("RENTAL")){
                             SetRentalData(mqttMessage.toString());
+
+
                         }
                     }
 ;                }
@@ -151,7 +161,7 @@ public class ViewRentalLodging extends AppCompatActivity {
         }
     }
 
-    public void Retreive(String mycommand, String id){
+    public void Retrieve(String mycommand, String id){
         String command = "004853";
         String reserve = "000000000000000000000000";
         String senderClientID = clientId;
@@ -165,6 +175,7 @@ public class ViewRentalLodging extends AppCompatActivity {
 
     public void SetLodgingData(String message){
         lodgingArrayList.clear();
+        lLeaseID.clear();
         String data[] = message.split("\\$");
         String head[] = c.convertToString(data[0]);
         int size = Integer.parseInt(head[4]);
@@ -175,23 +186,43 @@ public class ViewRentalLodging extends AppCompatActivity {
             lodging.setTitle(temp[0]);
             lodging.setAddress(temp[1].replace("$", " "));
             lodging.setImage(temp[2]);
-            rental.setRentalID(temp[3]);
+            lLeaseID.add(temp[3]);
             lodgingArrayList.add(lodging);
         }
         adapter.notifyDataSetChanged();
     }
 
     public void SetRentalData(String message){
+        listRentalHistory.clear();
+        listRentalCurrent.clear();
+
         String data[] = message.split("\\$");
-        String body[] = c.convertToString(data[1]);
-        Rental r = new Rental();
-        r.setRentalID(body[0]);
-        r.setIssueDate(body[1]);
-        r.setDueDate(body[2]);
-        r.setTotalAmount(Double.parseDouble(body[3]));
-        r.setStatus(body[4]);
-        r.setLeaseID(body[5]);
+        String head[] = c.convertToString(data[0]);
 
+        int size = Integer.parseInt(head[4]);
 
+        for(int index = 1; index <= size; index ++){
+            String body[] = c.convertToString(data[index]);
+            Rental r = new Rental();
+            r.setRentalID(body[0]);
+            r.setIssueDate(body[1]);
+            r.setDueDate(body[2]);
+            r.setTotalAmount(Double.parseDouble(body[3]));
+            r.setStatus(body[4]);
+            r.setLeaseID(body[5]);
+
+            if(r.getStatus().equals("Active")){
+                listRentalCurrent.add(r);
+            }
+            if(r.getStatus().equals("Expired")){
+                listRentalHistory.add(r);
+            }
+
+        }
+        Intent intent = new Intent(this, ViewRentalList.class);
+        intent.putExtra("RentalCurrent", listRentalCurrent);
+        intent.putExtra("RentalHistory", listRentalHistory);
+        intent.putExtra("SpecificLodging",lodgingArrayList.get(0) );
+        startActivity(intent);
     }
 }

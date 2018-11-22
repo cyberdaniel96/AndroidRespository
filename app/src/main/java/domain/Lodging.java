@@ -1,6 +1,8 @@
 package domain;
 
-public class Lodging {
+import java.io.Serializable;
+
+public class Lodging implements Serializable {
 
     private String lodgingId;
     private String title;

@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.johnn.lodgingservicesystemstudent.ViewMessage">
 
-    <!-- TODO: Update blank fragment layout -->
     <EditText
         android:id="@+id/messageEt"
         android:layout_width="match_parent"

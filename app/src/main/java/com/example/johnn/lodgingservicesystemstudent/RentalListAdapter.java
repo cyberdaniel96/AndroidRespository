@@ -13,20 +13,19 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import domain.Lodging;
+import domain.Rental;
 
 
-public class ViewLeaseStatusAdapter extends RecyclerView.Adapter {
+public class RentalListAdapter extends RecyclerView.Adapter {
 
     private Context context;
-    private List<Lodging> list;
+    private List<Rental> list;
 
-    ImageView lodgingImage;
-    TextView txtTitle;
-    TextView txtAddress;
+    TextView txtIssueDate, txtDueDate, txtStatus, txtAmount;
 
     private OnClickListener onClickListener;
 
-    public ViewLeaseStatusAdapter(Context context, List<Lodging> list) {
+    public RentalListAdapter(Context context, List<Rental> list) {
         this.context = context;
         this.list = list;
     }
@@ -36,19 +35,17 @@ public class ViewLeaseStatusAdapter extends RecyclerView.Adapter {
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            lodgingImage =  (ImageView)itemView.findViewById(R.id.imgLodging);
-            txtTitle = (TextView)itemView.findViewById(R.id.viewTitle);
-            txtAddress = (TextView)itemView.findViewById(R.id.txtAddress);
-
+            txtIssueDate = (TextView)itemView.findViewById(R.id.txtIssueDate);
+            txtDueDate = (TextView)itemView.findViewById(R.id.txtDueDate);
+            txtStatus = (TextView)itemView.findViewById(R.id.txtStatus);
+            txtAmount = (TextView)itemView.findViewById(R.id.txtAmount);
         }
 
-        void bind(Lodging lodging){
-            txtTitle.setText(lodging.getTitle());
-            txtAddress.setText(lodging.getAddress());
-            Glide.with(itemView.getContext())
-                    .load(lodging.getImage())
-                    .transform(new CircleTransform(itemView.getContext()))
-                    .into(lodgingImage);
+        void bind(Rental r){
+            txtIssueDate.setText(r.getIssueDate());
+            txtDueDate.setText(r.getDueDate());
+            txtStatus.setText(r.getStatus());
+            txtAmount.setText(r.getTotalAmount()+"");
         }
 
         @Override
@@ -60,14 +57,14 @@ public class ViewLeaseStatusAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cell_view_lease_status, parent, false);
+                .inflate(R.layout.row_rental_list, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Lodging lodging= (Lodging) list.get(position);
-        ((ViewHolder) holder).bind(lodging);
+        Rental rental= (Rental) list.get(position);
+        ((ViewHolder) holder).bind(rental);
     }
 
     @Override

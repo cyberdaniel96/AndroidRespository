@@ -1,10 +1,14 @@
 package domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.sql.Date;
 
 /** @author chang **/
 
-public class Rental {
+public class Rental implements Serializable {
     private String rentalID, status, leaseID;
     private String issueDate, dueDate;
     private double totalAmount;
@@ -68,6 +72,7 @@ public class Rental {
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
+
 
 
 }
