@@ -49,7 +49,6 @@ public class ViewRentalList extends AppCompatActivity {
         current = (ArrayList<Rental>) i.getSerializableExtra("RentalCurrent");
         history = (ArrayList<Rental>) i.getSerializableExtra("RentalHistory");
         lodging = (Lodging) i.getSerializableExtra("SpecificLodging");
-        Toast.makeText(this, current.size()+"", Toast.LENGTH_LONG).show();
         viewTitle = (TextView) findViewById(R.id.viewTitle);
         viewAddress = (TextView) findViewById(R.id.viewAddress);
         viewNoRecord  = (TextView)findViewById(R.id.txtNoRecord);

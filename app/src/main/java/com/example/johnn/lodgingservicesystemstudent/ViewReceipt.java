@@ -1,18 +1,27 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,8 +37,12 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import domain.Expense;
 import domain.Receipt;
@@ -53,7 +66,7 @@ public class ViewReceipt extends AppCompatActivity {
     ImageView imgReceipt;
     Receipt receipt = new Receipt();
 
-    Button btnCapture;
+    Button btnCapture, btnReset;
 
     RecyclerView recyclerView;
     ExpenseAdapter adapter;
@@ -62,8 +75,6 @@ public class ViewReceipt extends AppCompatActivity {
 
     String leaseID = "";
     String rentalID = "";
-
-    int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +89,10 @@ public class ViewReceipt extends AppCompatActivity {
         txtTime = (TextView)findViewById(R.id.txtTime);
         imgReceipt = (ImageView)findViewById(R.id.imgReceipt);
         btnCapture = (Button)findViewById(R.id.btnCapture);
-
+        btnReset = (Button)findViewById(R.id.btnReset);
         btnCapture.setOnClickListener(capture);
+        btnReset.setOnClickListener(reset);
+        btnReset.setVisibility(View.GONE);
 
         pb = new ProgressDialog(this);
         pb.setCanceledOnTouchOutside(false);
@@ -177,6 +190,13 @@ public class ViewReceipt extends AppCompatActivity {
         super.onResume();
         try {
             Connect();
+          if(imgReceipt.getDrawable().getConstantState()
+                  .equals(ContextCompat.getDrawable(ViewReceipt.this, R.drawable.example_receipt).getConstantState())){
+              imgReceipt.setImageDrawable(null);
+              imgReceipt.setImageDrawable(ContextCompat.getDrawable(ViewReceipt.this, R.drawable.example_receipt));
+              btnReset.setVisibility(View.GONE);
+              btnCapture.setText("CAPTURE");
+          }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -243,32 +263,127 @@ public class ViewReceipt extends AppCompatActivity {
         pb.dismiss();
     }
 
-    private Uri outPutfileUri;
-    Bitmap bitmap = null;
-
-
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private static final int CAMERA_REQUEST = 1888;
     private View.OnClickListener capture = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent pictureIntent = new Intent(
-                    MediaStore.ACTION_IMAGE_CAPTURE
-            );
-            if(pictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(pictureIntent,
-                        REQUEST_IMAGE_CAPTURE);
+            btnReset.setVisibility(View.VISIBLE);
+            String text = btnCapture.getText().toString().toUpperCase();
+            if(text.equals("CAPTURE")){
+                capture();
+                btnCapture.setText("SUBMIT");
+            }
+            if(text.equals("SUBMIT")){
+                btnReset.setVisibility(View.GONE);
+                Toast.makeText(ViewReceipt.this, "submmited", Toast.LENGTH_SHORT).show();
             }
         }
     };
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            if (data != null && data.getExtras() != null) {
-                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+    private View.OnClickListener reset = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            imgReceipt.setImageDrawable(null);
+            imgReceipt.setImageDrawable(ContextCompat.getDrawable(ViewReceipt.this, R.drawable.example_receipt));
+            btnReset.setVisibility(View.GONE);
+            btnCapture.setText("CAPTURE");
+        }
+    };
 
-                imgReceipt.setImageBitmap(ImageUtility.getPhoto(ImageUtility.getByte(imageBitmap)));
+    public void capture(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(ViewReceipt.this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST);
             }
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new
+                        Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            } else {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+    }
+    String mCurrentPhotoPath = "";
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            // Get the dimensions of the View
+            int targetW = imgReceipt.getWidth();
+            int targetH = imgReceipt.getHeight();
+
+            // Get the dimensions of the bitmap
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+            int photoW = bmOptions.outWidth;
+            int photoH = bmOptions.outHeight;
+
+            // Determine how much to scale down the image
+            int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+            // Decode the image file into a Bitmap sized to fill the View
+            bmOptions.inJustDecodeBounds = false;
+            bmOptions.inSampleSize = scaleFactor;
+            bmOptions.inPurgeable = true;
+
+            Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+            Drawable d = new BitmapDrawable(getResources(), bitmap);
+            imgReceipt.setImageDrawable(d);
+        }
+    }
+
+    private boolean hasImage(@NonNull ImageView view) {
+        Drawable drawable = view.getDrawable();
+        boolean hasImage = (drawable != null);
+
+        if (hasImage && (drawable instanceof BitmapDrawable)) {
+            hasImage = ((BitmapDrawable)drawable).getBitmap() != null;
+        }
+
+        return hasImage;
+    }
 }
