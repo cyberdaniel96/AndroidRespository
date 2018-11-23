@@ -12,21 +12,22 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import domain.Expense;
 import domain.Lodging;
 import domain.Rental;
 
 
-public class RentalListAdapter extends RecyclerView.Adapter {
+public class ExpenseAdapter extends RecyclerView.Adapter {
 
     private Context context;
-    private List<Rental> list;
+    private List<Expense> list;
 
-    TextView txtIssueDate, txtDueDate, txtStatus, txtAmount;
+    TextView viewCategory, viewSubAmount;
 
 
     private OnClickListener onClickListener;
 
-    public RentalListAdapter(Context context, List<Rental> list) {
+    public ExpenseAdapter(Context context, List<Expense> list) {
         this.context = context;
         this.list = list;
     }
@@ -36,36 +37,34 @@ public class RentalListAdapter extends RecyclerView.Adapter {
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            txtIssueDate = (TextView)itemView.findViewById(R.id.txtIssueDate);
-            txtDueDate = (TextView)itemView.findViewById(R.id.txtDueDate);
-            txtStatus = (TextView)itemView.findViewById(R.id.txtStatus);
-            txtAmount = (TextView)itemView.findViewById(R.id.txtAmount);
+            viewCategory = (TextView)itemView.findViewById(R.id.viewCategory);
+            viewSubAmount = (TextView)itemView.findViewById(R.id.viewSubAmount);
+
         }
 
-        void bind(Rental r){
-            txtIssueDate.setText(r.getIssueDate());
-            txtDueDate.setText(r.getDueDate());
-            txtStatus.setText(r.getStatus());
-            txtAmount.setText(r.getTotalAmount()+"");
+        void bind(Expense expense){
+            viewCategory.setText(expense.getCategory());
+            viewSubAmount.setText(expense.getAmount()+"");
+
         }
 
         @Override
         public void onClick(View v) {
-            onClickListener.onClick(v, getAdapterPosition(), list.get(getAdapterPosition()));
+            onClickListener.onClick(v, getAdapterPosition());
         }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_rental_list, parent, false);
+                .inflate(R.layout.row_expense, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Rental rental= (Rental) list.get(position);
-        ((ViewHolder) holder).bind(rental);
+        Expense expense= (Expense) list.get(position);
+        ((ViewHolder) holder).bind(expense);
     }
 
     @Override
@@ -78,7 +77,7 @@ public class RentalListAdapter extends RecyclerView.Adapter {
     }
 
     interface OnClickListener{
-        void onClick(View v, int positionm, Rental rental);
+        void onClick(View v, int positionm);
     }
 
 

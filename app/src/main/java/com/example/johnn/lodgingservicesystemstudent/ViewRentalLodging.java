@@ -222,7 +222,8 @@ public class ViewRentalLodging extends AppCompatActivity {
         Intent intent = new Intent(this, ViewRentalList.class);
         intent.putExtra("RentalCurrent", listRentalCurrent);
         intent.putExtra("RentalHistory", listRentalHistory);
-        intent.putExtra("SpecificLodging",lodgingArrayList.get(0) );
+        intent.putExtra("SpecificLodging",lodgingArrayList.get(adapterClickPosition));
+        intent.putExtra("LeaseID", lLeaseID.get(adapterClickPosition));
         startActivity(intent);
     }
 }
