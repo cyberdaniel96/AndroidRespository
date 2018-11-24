@@ -20,6 +20,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import domain.Expense;
 import domain.Receipt;
@@ -276,10 +278,36 @@ public class ViewReceipt extends AppCompatActivity {
             }
             if(text.equals("SUBMIT")){
                 btnReset.setVisibility(View.GONE);
+                SubmitData();
                 Toast.makeText(ViewReceipt.this, "submmited", Toast.LENGTH_SHORT).show();
             }
         }
     };
+
+    public void SubmitData(){
+        String command = "004855";
+        String reserve = "000000000000000000000000";
+        String senderClientID = clientId;
+        String receiverClientID = "serverLSSserver";
+
+        String payload = c.convertToHex(new String[]{command, reserve, senderClientID, receiverClientID, ""});
+
+        //Start:: Convert Image To String
+        BitmapDrawable bitmapDrawable = (BitmapDrawable)imgReceipt.getDrawable();
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] bytes = stream.toByteArray();
+        String image  = Base64.encodeToString(bytes, Base64.NO_WRAP);
+        //End:: Convert Image To String
+
+        System.err.println(image);
+
+        payload += "$" + image +"@"+ receipt.getReceiptID();
+        Log.e("ID", "HERE:::"+receipt.getReceiptID());
+        Publish(payload);
+
+    }
 
     private View.OnClickListener reset = new View.OnClickListener() {
         @Override
