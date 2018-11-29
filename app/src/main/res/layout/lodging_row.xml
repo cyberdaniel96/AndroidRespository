@@ -37,4 +37,14 @@
         android:gravity="right"
         android:textSize="12sp" />
 
+    <TextView
+        android:id="@+id/statusTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/priceTv"
+        android:layout_toRightOf="@id/lodgingPicIv"
+        android:gravity="right"
+        android:textColor="#64DD17"
+        android:textSize="12sp" />
+
 </RelativeLayout>

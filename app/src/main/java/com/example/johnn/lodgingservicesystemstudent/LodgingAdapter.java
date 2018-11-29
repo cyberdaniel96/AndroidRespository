@@ -1,6 +1,7 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class LodgingAdapter extends RecyclerView.Adapter<LodgingAdapter.ViewHold
         public TextView price;
         public TextView type;
         public ImageView picture;
+        public TextView status;
 
         public ViewHolder(View v) {
             super(v);
@@ -34,7 +36,7 @@ public class LodgingAdapter extends RecyclerView.Adapter<LodgingAdapter.ViewHold
             price = v.findViewById(R.id.priceTv);
             type = v.findViewById(R.id.lodgingTypeTv);
             picture = v.findViewById(R.id.lodgingPicIv);
-
+            status = v.findViewById(R.id.statusTv);
         }
 
         @Override
@@ -65,6 +67,11 @@ public class LodgingAdapter extends RecyclerView.Adapter<LodgingAdapter.ViewHold
                 .skipMemoryCache(true)
                 .centerCrop()
                 .into(holder.picture);
+        if(!l.getStatus().equals("")){
+            holder.status.setText(l.getStatus());
+            if(!l.getStatus().equals("Active"))
+                holder.status.setTextColor(Color.RED);
+        }
     }
 
     @Override

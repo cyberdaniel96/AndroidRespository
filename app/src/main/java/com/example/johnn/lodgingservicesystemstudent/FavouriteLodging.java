@@ -2,8 +2,8 @@ package com.example.johnn.lodgingservicesystemstudent;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -19,14 +19,9 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import domain.Favourite;
 import domain.Lodging;
 import service.Converter;
 
@@ -146,6 +141,8 @@ public class FavouriteLodging extends AppCompatActivity {
             l.setExpireDate(c.ToString(body[3]));
             l.setLodgingType(c.ToString(body[4]));
             l.setImage(c.ToString(body[5]));
+            l.setStatus(c.ToString(body[6]));
+
             ll.add(l);
         }
 

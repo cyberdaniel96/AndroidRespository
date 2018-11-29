@@ -2,7 +2,6 @@ package com.example.johnn.lodgingservicesystemstudent;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -40,9 +39,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import domain.Lodging;
 import service.Converter;
 import service.SessionManager;
-import domain.Lodging;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -59,7 +58,7 @@ public class Home extends AppCompatActivity
     Converter c = new Converter();
     List<Lodging> ll = new ArrayList<>();
     ProgressDialog pb;
-    public static String ip = "192.168.43.85";
+    public static String ip = "103.52.192.245:8803";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,6 +255,7 @@ public class Home extends AppCompatActivity
             l.setExpireDate(c.ToString(body[3]));
             l.setLodgingType(c.ToString(body[4]));
             l.setImage(c.ToString(body[5]));
+            l.setStatus(" ");
             ll.add(l);
         }
     }
@@ -327,6 +327,9 @@ public class Home extends AppCompatActivity
         }else if(id == R.id.nav_view_lease){
             Intent intent = new Intent(this,ViewLeaseStatus.class);
             startActivity(intent);
+        }else if(id == R.id.nav_view_rental){
+            Intent intent = new Intent(this,ViewRentalLodging.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -348,6 +351,7 @@ public class Home extends AppCompatActivity
                 .skipMemoryCache(true)
                 .transform(new CircleTransform(this))
                 .into(profile);
+
         pb.show();
         try {
             Connect();

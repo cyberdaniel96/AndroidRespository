@@ -1,16 +1,16 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -22,7 +22,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,12 +43,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import domain.Expense;
 import domain.Receipt;
 import service.Converter;
-import service.ImageUtility;
 
 public class ViewReceipt extends AppCompatActivity {
 
@@ -57,7 +54,7 @@ public class ViewReceipt extends AppCompatActivity {
     String topic = "MY/TARUC/LSS/000000001/PUB";
     int qos = 1;
     String broker = Home.broker;
-    String clientId = "1610480"+9;
+    String clientId = "";
     String receiverClientId = "serverLSSserver";
     MemoryPersistence persistence = new MemoryPersistence();
     final Converter c = new Converter();
@@ -83,6 +80,9 @@ public class ViewReceipt extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_receipt);
         intent = getIntent();
+
+        SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
+        clientId = userDetails.getString("UserID","")+9;
 
         txtReceiptID = (TextView)findViewById(R.id.txtReceiptID);
         txtAmount = (TextView)findViewById(R.id.txtAmount);
@@ -227,7 +227,6 @@ public class ViewReceipt extends AppCompatActivity {
     public void SetReceiptData(String message){
         String[] data = message.split("\\$");
         String[] body = c.convertToString(data[1]);
-
         receipt.setReceiptID(body[0]);
         receipt.setAmount(Double.parseDouble(body[1]));
         receipt.setImage(body[2]);
@@ -237,11 +236,11 @@ public class ViewReceipt extends AppCompatActivity {
         txtReceiptID.setText(receipt.getReceiptID());
         txtAmount.setText(receipt.getAmount()+"");
         txtStatus.setText(receipt.getPayStatus());
-        String[] tempDate = receipt.getDateTime().split(" ");
-        String date = tempDate[0];
-        String time = tempDate[1].substring(0, 5);
-        txtDate.setText(date);
-        txtTime.setText(time);
+//        String[] tempDate = receipt.getDateTime().split(" ");
+//        String date = tempDate[0];
+//        String time = tempDate[1].substring(0, 5);
+        txtDate.setText("N/A");
+        txtTime.setText("N/A");
 
         Retrieve("EXPENDSES", rentalID);
     }
@@ -292,21 +291,33 @@ public class ViewReceipt extends AppCompatActivity {
 
         String payload = c.convertToHex(new String[]{command, reserve, senderClientID, receiverClientID, ""});
 
-        //Start:: Convert Image To String
+       // Start:: Convert Image To String
         BitmapDrawable bitmapDrawable = (BitmapDrawable)imgReceipt.getDrawable();
-        Bitmap bitmap = bitmapDrawable.getBitmap();
+        Bitmap bitmap = getResizedBitmap(bitmapDrawable.getBitmap(), 500, 500);
+
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] bytes = stream.toByteArray();
         String image  = Base64.encodeToString(bytes, Base64.NO_WRAP);
-        //End:: Convert Image To String
-
-        System.err.println(image);
+      //  End:: Convert Image To String
 
         payload += "$" + image +"@"+ receipt.getReceiptID();
         Log.e("ID", "HERE:::"+receipt.getReceiptID());
         Publish(payload);
+        finish();
+    }
 
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
+                matrix, false);
+
+        return resizedBitmap;
     }
 
     private View.OnClickListener reset = new View.OnClickListener() {
@@ -401,8 +412,12 @@ public class ViewReceipt extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
             Drawable d = new BitmapDrawable(getResources(), bitmap);
             imgReceipt.setImageDrawable(d);
+
+
         }
     }
+
+
 
     private boolean hasImage(@NonNull ImageView view) {
         Drawable drawable = view.getDrawable();

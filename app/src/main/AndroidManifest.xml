@@ -21,6 +21,11 @@
 
         <activity android:name=".Login">
             android:windowSoftInputMode="adjustPan"
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Home"
@@ -71,9 +76,6 @@
         <activity android:name=".ViewAppointment" />
         <activity android:name=".ViewAppointmentDetails" />
         <activity android:name=".UpdateAppointment" />
-        <activity
-            android:name=".Testing"
-            android:launchMode="singleTop" />
 
         <receiver android:name=".MonthCalendarWidget">
             <intent-filter>
@@ -114,14 +116,10 @@
         <activity android:name=".CodeChoosePeople" />
         <activity android:name=".ViewLeaseStatus" />
         <activity android:name=".ViewRentalLodging">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ViewRentalList"></activity>
         <activity android:name=".ViewReceipt"></activity>
     </application>
-
+<!---->
 </manifest>

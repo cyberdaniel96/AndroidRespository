@@ -15,6 +15,7 @@ public class Lodging implements Serializable {
     private String userId;
     private String image;
     private String message;
+    private String status;
 
     public Lodging() {
     }
@@ -106,5 +107,13 @@ public class Lodging implements Serializable {
 
     public void setExpireDate(String expireDate) {
         this.expireDate = expireDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

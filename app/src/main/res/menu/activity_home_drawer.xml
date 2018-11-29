@@ -34,6 +34,12 @@
                     android:icon="@drawable/ic_code_generate_black_24dp"
                     android:title = "View Lease"
                     android:checkable="false"/>
+                <item
+                    android:id="@+id/nav_view_rental"
+                    android:icon="@drawable/example_receipt"
+                    android:title="Rental Review"
+                    android:checked="false"
+                    />
             </menu>
         </item>
     </group>
@@ -50,6 +56,7 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_exit_to_app_black_48dp"
             android:title="@string/logout" />
+
     </group>
 
 </menu>
