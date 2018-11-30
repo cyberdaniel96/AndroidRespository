@@ -58,8 +58,8 @@ public class Home extends AppCompatActivity
     Converter c = new Converter();
     List<Lodging> ll = new ArrayList<>();
     ProgressDialog pb;
-    //public static String ip = "103.52.192.245:8803";
-    public static String ip = "172.20.10.5";
+    public static String ip = "103.52.192.245:8803";
+    //public static String ip = "172.20.10.5";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -358,7 +358,6 @@ public class Home extends AppCompatActivity
                 .transform(new CircleTransform(this))
                 .into(profile);
 
-        pb.show();
 
     }
 
