@@ -1,7 +1,5 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
-import android.annotation.TargetApi;
-import android.app.AppOpsManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -10,14 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -27,22 +22,11 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.json.JSONObject;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import domain.Appointment;
 import service.Converter;
@@ -304,7 +288,6 @@ public class MonthCalendarWidget extends AppWidgetProvider {
             headerRowRv.addView(R.id.row_container, dayRv);
         }
         rv.addView(R.id.calendar, headerRowRv);
-        Toast.makeText(context, appMap.isEmpty() + "", Toast.LENGTH_LONG).show();
         if (!appMap.isEmpty()) {
             saveMap(context, appMap);
             for (int week = 0; week < numWeeks; week++) {

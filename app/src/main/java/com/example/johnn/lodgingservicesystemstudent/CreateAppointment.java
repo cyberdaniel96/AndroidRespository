@@ -1,15 +1,12 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,8 +25,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import java.io.File;
-import java.nio.file.FileSystem;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -111,7 +106,7 @@ public class CreateAppointment extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String date = spinDate.getItemAtPosition(position).toString();
                 List<String> myTime = map.get(date);
-                Toast.makeText(getApplicationContext(), myTime.isEmpty()+"", Toast.LENGTH_LONG).show();
+
                 String[] timeArray = myTime.toArray(new String[myTime.size()]);
                 ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(CreateAppointment.this, android.R.layout.simple_spinner_item, timeArray);
                 timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

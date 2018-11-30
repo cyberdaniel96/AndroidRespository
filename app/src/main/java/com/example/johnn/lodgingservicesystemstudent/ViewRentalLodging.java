@@ -1,13 +1,14 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -30,7 +31,7 @@ public class ViewRentalLodging extends AppCompatActivity {
     String topic = "MY/TARUC/LSS/000000001/PUB";
     int qos = 1;
     String broker = Home.broker;
-    String clientId = "1610480"+9;
+    String clientId = "";
     String receiverClientId = "serverLSSserver";
     MemoryPersistence persistence = new MemoryPersistence();
     final Converter c = new Converter();
@@ -49,13 +50,19 @@ public class ViewRentalLodging extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_rental_lodging);
-
+        SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
+        clientId = userDetails.getString("UserID","")+9;
         recyclerView = (RecyclerView) findViewById(R.id.viewRentalList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new ViewLeaseStatusAdapter(this, lodgingArrayList);
         recyclerView.setAdapter(adapter);
 
+        adaterOnclick();
+
+    }
+
+    public void adaterOnclick(){
         adapter.setOnClickListener(new ViewLeaseStatusAdapter.OnClickListener() {
             @Override
             public void onClick(View v, int index) {
@@ -146,6 +153,7 @@ public class ViewRentalLodging extends AppCompatActivity {
         super.onResume();
         try {
             Connect();
+            Log.e("testing", "hello");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -225,5 +233,24 @@ public class ViewRentalLodging extends AppCompatActivity {
         intent.putExtra("SpecificLodging",lodgingArrayList.get(adapterClickPosition));
         intent.putExtra("LeaseID", lLeaseID.get(adapterClickPosition));
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(keyCode == 4){
+                Intent intent = new Intent(this, Home.class);
+                startActivity(intent);
+                ViewRentalLodging.this.finish();
+            }
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

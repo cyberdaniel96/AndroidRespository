@@ -1,13 +1,10 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.CheckBox;
@@ -126,7 +123,7 @@ public class Login extends AppCompatActivity {
                             editor.putString("UserID", userId);
                             editor.putString("Email", email);
                             editor.apply();
-                            Toast.makeText(getBaseContext(),c.ToString(datas[7]),Toast.LENGTH_LONG).show();
+
                             Intent in = new Intent(Login.this, PrivateChatList.class);
                             startActivity(in);
                         } else if (state.equals("1")){

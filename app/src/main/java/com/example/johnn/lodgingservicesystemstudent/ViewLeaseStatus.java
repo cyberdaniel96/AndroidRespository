@@ -2,14 +2,11 @@ package com.example.johnn.lodgingservicesystemstudent;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -51,7 +48,9 @@ public class ViewLeaseStatus extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_lease_status);
-        clientId = "16104809";
+        SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
+        clientId = userDetails.getString("UserID","")+7;
+
 
         pb = new ProgressDialog(this);
         pb.setCanceledOnTouchOutside(false);
@@ -87,6 +86,7 @@ public class ViewLeaseStatus extends AppCompatActivity {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
                 Subscribe();
+
                 Retrieve("GETLOD","");
 
             }
@@ -172,7 +172,7 @@ public class ViewLeaseStatus extends AppCompatActivity {
         String command = "004849";
         String reserve = "000000000000000000000000";
         String senderClientID = clientId;
-        String tenantID = "1610480";
+        String tenantID = clientId.substring(0,clientId.length()-1);
 
         String payload = "";
         if(mycommand.equals("GETLOD")){

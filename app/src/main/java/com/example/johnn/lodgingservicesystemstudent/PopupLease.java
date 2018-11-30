@@ -1,13 +1,9 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
-import android.app.Service;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,6 +101,12 @@ public class PopupLease extends PopupWindow {
 
         btnSubmit = (Button)view.findViewById(R.id.btnSubmit);
         btnSubmit.setOnClickListener(onClickListenerSubmit);
+
+        if(txtStatus.getText().toString().equals("Terminated")){
+            btnSubmit.setEnabled(false);
+            rdOptGroup.setEnabled(false);
+            txtStatus.setTextColor(Color.RED);
+        }
     }
 
     private View.OnClickListener onClickListenerSubmit = new View.OnClickListener() {
@@ -136,6 +138,7 @@ public class PopupLease extends PopupWindow {
                     Services.publish(serverData +"$"+ message);
                     pushNotification(false);
                     Toast.makeText(context, "Information Submitted", Toast.LENGTH_LONG).show();
+                    PopupLease.this.dismiss();
                 }
 
             }
@@ -162,6 +165,7 @@ public class PopupLease extends PopupWindow {
                 Services.publish(serverData +"$"+ message);
                 pushNotification(true);
                 Toast.makeText(context, "Information Submitted", Toast.LENGTH_LONG).show();
+                PopupLease.this.dismiss();
             }
 
         }

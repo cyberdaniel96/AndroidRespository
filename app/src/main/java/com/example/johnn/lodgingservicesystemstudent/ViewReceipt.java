@@ -82,7 +82,7 @@ public class ViewReceipt extends AppCompatActivity {
         intent = getIntent();
 
         SharedPreferences userDetails = getSharedPreferences("LoggedInUser", MODE_PRIVATE);
-        clientId = userDetails.getString("UserID","")+9;
+        clientId = userDetails.getString("UserID","")+8;
 
         txtReceiptID = (TextView)findViewById(R.id.txtReceiptID);
         txtAmount = (TextView)findViewById(R.id.txtAmount);
@@ -304,7 +304,10 @@ public class ViewReceipt extends AppCompatActivity {
         payload += "$" + image +"@"+ receipt.getReceiptID();
         Log.e("ID", "HERE:::"+receipt.getReceiptID());
         Publish(payload);
-        finish();
+
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
+        ViewReceipt.this.finish();
     }
 
     public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {

@@ -58,7 +58,8 @@ public class Home extends AppCompatActivity
     Converter c = new Converter();
     List<Lodging> ll = new ArrayList<>();
     ProgressDialog pb;
-    public static String ip = "103.52.192.245:8803";
+    //public static String ip = "103.52.192.245:8803";
+    public static String ip = "172.20.10.5";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -341,6 +342,11 @@ public class Home extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        try {
+            Connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
@@ -353,11 +359,7 @@ public class Home extends AppCompatActivity
                 .into(profile);
 
         pb.show();
-        try {
-            Connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override

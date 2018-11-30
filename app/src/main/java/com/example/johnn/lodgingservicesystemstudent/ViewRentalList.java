@@ -1,30 +1,23 @@
 package com.example.johnn.lodgingservicesystemstudent;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
 import domain.Lodging;
 import domain.Rental;
-import service.Converter;
 
 public class ViewRentalList extends AppCompatActivity {
 
@@ -35,6 +28,7 @@ public class ViewRentalList extends AppCompatActivity {
 
     TextView viewTitle, viewAddress, viewNoRecord;
     Button btnCurrent, btnHistory;
+    ImageView img;
 
 
     RecyclerView recyclerView;
@@ -52,9 +46,15 @@ public class ViewRentalList extends AppCompatActivity {
         viewTitle = (TextView) findViewById(R.id.viewTitle);
         viewAddress = (TextView) findViewById(R.id.viewAddress);
         viewNoRecord  = (TextView)findViewById(R.id.txtNoRecord);
+        img = (ImageView) findViewById(R.id.imageView);
 
         viewTitle.setText(lodging.getTitle());
         viewAddress.setText(lodging.getAddress());
+        Glide.with(this)
+                .load(lodging.getImage())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(img);
         btnCurrent = (Button)findViewById(R.id.btnCurrent);
         btnHistory = (Button) findViewById(R.id.btnHistory);
 
@@ -127,6 +127,7 @@ public class ViewRentalList extends AppCompatActivity {
             intent.putExtra("LeaseID", tempIntent.getStringExtra("LeaseID"));
             intent.putExtra("RentalID", rental.getRentalID());
             startActivity(intent);
+            ViewRentalList.this.finish();
         }
     };
 }

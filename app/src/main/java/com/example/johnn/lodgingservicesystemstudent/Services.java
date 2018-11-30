@@ -3,13 +3,12 @@ package com.example.johnn.lodgingservicesystemstudent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
+
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -21,10 +20,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import java.security.PublicKey;
 import java.util.HashMap;
 
-import domain.Appointment;
 import service.Converter;
 import service.SessionManager;
 
@@ -251,7 +248,7 @@ public class Services extends Service {
                     break;
             }
         }
-        Toast.makeText(getApplicationContext(), clsCommand, Toast.LENGTH_LONG).show();
+
         if(clsCommand.equals("PRIVATECHAT")){
             String title = notiData[0];
             String content = notiData[1];
