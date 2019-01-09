@@ -54,15 +54,20 @@ public class ViewAppointmentAdapter extends RecyclerView.Adapter {
             if(appointment.getStatus().equals("pending")){
                 status.setText(appointment.getStatus());
                 status.setTextColor(Color.rgb(255,215,0));
-            }
+            }else
             if(appointment.getStatus().equals("accept")){
                 status.setText(appointment.getStatus());
                 status.setTextColor(Color.rgb(124,252,0));
-            }
+            }else
             if(appointment.getStatus().equals("reject")){
                 status.setText(appointment.getStatus());
                 status.setTextColor(Color.rgb(255,0,0));
+            }else
+            if(appointment.getStatus().equals("inactive")){
+                status.setText(appointment.getStatus());
+                status.setTextColor(Color.rgb(255,0,0));
             }
+
 
             String[] dateTime = appointment.getDateTime().split("AND");
             date.setText(dateTime[0]);
